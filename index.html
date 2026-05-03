@@ -1154,8 +1154,7 @@
       <p class="contact-tagline reveal">You don't need to have it all figured out to <em>start.</em><br>That's what we're here for.</p>
       <p class="contact-note reveal">Reach out with a rough idea, a finished demo, or just a question. We respond to every message — not because we have to, but because we genuinely want to hear what you're working on.</p>
       <div class="contact-detail reveal"><span class="contact-detail-icon">📍</span><span class="contact-detail-text">Bengaluru, India</span></div>
-      <div class="contact-detail reveal reveal-delay-1"><span class="contact-detail-icon">📧</span><span class="contact-detail-text"><a href="mailto:hello@hektarstudios.in">hello@hektarstudios.in</a></span></div>
-      <div class="contact-detail reveal reveal-delay-2"><span class="contact-detail-icon">📱</span><span class="contact-detail-text"><a href="https://instagram.com/hektarstudios" target="_blank">@hektarstudios</a></span></div>
+      <div class="contact-detail reveal reveal-delay-1"><span class="contact-detail-icon">📱</span><span class="contact-detail-text"><a href="https://instagram.com/hektarstudios" target="_blank">@hektarstudios</a></span></div>
     </div>
     <div>
       <div class="contact-form" id="contactForm">
@@ -1626,13 +1625,13 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       document.getElementById('contactForm').style.display='none';
       document.getElementById('formSuccess').classList.add('show');
     } else {
-      alert('Something went wrong. Please try again or email us directly at hello@hektarstudios.in');
+      alert('Something went wrong. Please try again or reach out to us on Instagram @hektarstudios');
       btn.textContent = 'Send Message';
       btn.disabled = false;
     }
   })
   .catch(()=>{
-    alert('Something went wrong. Please try again or email us directly at hello@hektarstudios.in');
+    alert('Something went wrong. Please try again or reach out to us on Instagram @hektarstudios');
     btn.textContent = 'Send Message';
     btn.disabled = false;
   });
