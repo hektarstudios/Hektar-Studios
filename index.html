@@ -172,9 +172,9 @@
     .hamburger.open span:nth-child(1){transform:rotate(45deg) translateY(4.5px) translateX(3.5px);}
     .hamburger.open span:nth-child(2){opacity:0;}
     .hamburger.open span:nth-child(3){transform:rotate(-45deg) translateY(-4.5px) translateX(3.5px);}
-    .mobile-nav{display:none;position:fixed;inset:0;background:var(--bg);z-index:90;flex-direction:column;align-items:center;justify-content:center;gap:40px;padding-top:80px;}
+    .mobile-nav{display:none;position:fixed;inset:0;background:var(--bg);z-index:90;flex-direction:column;align-items:center;justify-content:center;gap:clamp(16px,4vh,40px);padding-top:80px;padding-bottom:24px;}
     .mobile-nav.open{display:flex;}
-    .mobile-nav a{font-family:var(--font-hero);font-size:40px;color:var(--cream);text-transform:uppercase;letter-spacing:2px;transition:color 0.2s;}
+    .mobile-nav a{font-family:var(--font-hero);font-size:clamp(28px,8vw,40px);color:var(--cream);text-transform:uppercase;letter-spacing:2px;transition:color 0.2s;}
     .mobile-nav a:hover{color:var(--yellow);}
 
     /* HERO — flex column, space-between fixes large screen gaps */
@@ -255,6 +255,13 @@
     /* #11 min-height prevents squishing on large displays */
     .service-card{background:var(--bg-card);border:1px solid var(--border);padding:40px 28px;position:relative;overflow:hidden;min-height:320px;display:flex;flex-direction:column;transition:background 0.18s,border-color 0.18s,transform 0.35s var(--transition);}
     .service-card:hover{background:var(--yellow);border-color:var(--yellow);transform:translateY(-4px);}
+    /* Mobile: card turns yellow when scrolled to center */
+    .service-card.card-active{background:var(--yellow);border-color:var(--yellow);}
+    .service-card.card-active .service-num{color:rgba(0,0,0,0.12);}
+    .service-card.card-active .service-name{color:#000;}
+    .service-card.card-active .service-desc{color:rgba(0,0,0,0.65);}
+    .service-card.card-active .service-icon{filter:grayscale(1) brightness(0);}
+    .service-card.card-active .service-detail{opacity:1;transform:none;color:#000;border-top-color:rgba(0,0,0,0.15);}
     .service-card>*{position:relative;z-index:1;}
     /* #1 service numbers yellow by default */
     .service-num{font-family:var(--font-hero);font-size:80px;color:var(--yellow);line-height:1;margin-bottom:24px;transition:color 0.18s;}
@@ -567,6 +574,7 @@
       .footer-inner>div:nth-child(3){grid-column:1/-1;grid-row:2;display:flex;flex-direction:column;align-items:center;gap:12px;}
       .footer-right{text-align:center;}
       .footer-socials{justify-content:center;margin-bottom:0!important;}
+      .footer-inner img{height:44px!important;}
       .audio-tabs{flex-wrap:wrap;}
       .crossfade-ui{gap:8px;padding:10px 12px;}
       .crossfade-waveform-wrap{min-width:0;flex:1;}
@@ -577,7 +585,7 @@
       .crossfader-row{margin-top:8px;}
     }
     @media(max-width:640px){.nav-links{display:none;}}
-    @media(max-width:480px){.portfolio-grid{grid-template-columns:1fr;}.about-pillars{grid-template-columns:1fr;}.hero-stat{display:none;}}
+    @media(max-width:480px){.portfolio-grid{grid-template-columns:1fr;}.about-pillars{grid-template-columns:1fr;}.hero-stat{text-align:left;}.hero-stat-num{font-size:clamp(36px,8vw,52px);}}
     @media(max-width:768px){
       .about-pillars{grid-template-columns:1fr 1fr;}
       .pillar{min-height:140px;}
@@ -1535,6 +1543,19 @@ document.getElementById('pm-film').addEventListener('transitionend', fetchYTMeta
 document.querySelector('[data-portfolio="film"]').addEventListener('click', () => {
   setTimeout(fetchYTMeta, 100);
 });
+/* ── Service cards: highlight when centered on mobile ── */
+(function initMobileServiceHighlight(){
+  if(window.matchMedia('(hover:hover)').matches) return;
+  const cards = document.querySelectorAll('.service-card');
+  if(!cards.length) return;
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      e.target.classList.toggle('card-active', e.intersectionRatio >= 0.6);
+    });
+  }, {threshold:[0.6], rootMargin:'-10% 0px -10% 0px'});
+  cards.forEach(c => obs.observe(c));
+})();
+
 document.getElementById('formSubmit').addEventListener('click',()=>{
   const n=document.getElementById('name').value.trim();
   const em=document.getElementById('email').value.trim();
