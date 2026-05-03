@@ -114,6 +114,7 @@
     audio/prod1-demo.mp3    audio/prod1-final.mp3
     audio/prod2-demo.mp3    audio/prod2-final.mp3
     audio/prod3-demo.mp3    audio/prod3-final.mp3
+    audio/prod4-demo.mp3    audio/prod4-final.mp3
 
   Section 2 — Before Mix → After Mix (3 tracks):
     audio/mix1-raw.mp3      audio/mix1-mixed.mp3
@@ -842,6 +843,25 @@
         <audio id="cfpro-p3" src="Audio/prod3-final.mp3"></audio>
         <audio id="cfraw-p3" src="Audio/prod3-demo.mp3"></audio>
       </div>
+      <div class="audio-track reveal" id="cfrow-p4">
+        <div class="track-meta"><div><div class="track-artist">Nahush Kumar</div><div class="track-title">Aleyo Kadalo</div></div><span class="track-genre">Kannada · Soft Cinematic Ballad</span></div>
+        <div class="crossfade-ui">
+          <button class="play-btn" data-cf="p4"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div class="crossfade-waveform-col">
+            <div class="crossfade-waveform-wrap" data-cf-id="p4">
+              <div class="crossfade-waveform" id="cfwave-p4"></div>
+              <div class="cf-playhead" id="cfplay-p4"></div>
+              <div class="cf-scrubline" id="cfscrub-p4"></div>
+            </div>
+            <div class="crossfader-row">
+              <input type="range" class="crossfade-range" id="cfslider-p4" min="0" max="100" value="50">
+            </div>
+          </div>
+          <span class="cf-time" id="cftime-p4">0:00</span>
+        </div>
+        <audio id="cfpro-p4" src="Audio/prod4-final.mp3"></audio>
+        <audio id="cfraw-p4" src="Audio/prod4-demo.mp3"></audio>
+      </div>
     </div>
   </div>
 
@@ -1248,6 +1268,7 @@ const cfDefs = {
   p1:{pro:'cfpro-p1',raw:'cfraw-p1',wave:'cfwave-p1',play:'cfplay-p1',scrub:'cfscrub-p1',time:'cftime-p1',slider:'cfslider-p1'},
   p2:{pro:'cfpro-p2',raw:'cfraw-p2',wave:'cfwave-p2',play:'cfplay-p2',scrub:'cfscrub-p2',time:'cftime-p2',slider:'cfslider-p2'},
   p3:{pro:'cfpro-p3',raw:'cfraw-p3',wave:'cfwave-p3',play:'cfplay-p3',scrub:'cfscrub-p3',time:'cftime-p3',slider:'cfslider-p3'},
+  p4:{pro:'cfpro-p4',raw:'cfraw-p4',wave:'cfwave-p4',play:'cfplay-p4',scrub:'cfscrub-p4',time:'cftime-p4',slider:'cfslider-p4'},
   m1:{pro:'cfpro-m1',raw:'cfraw-m1',wave:'cfwave-m1',play:'cfplay-m1',scrub:'cfscrub-m1',time:'cftime-m1',slider:'cfslider-m1'},
   m2:{pro:'cfpro-m2',raw:'cfraw-m2',wave:'cfwave-m2',play:'cfplay-m2',scrub:'cfscrub-m2',time:'cftime-m2',slider:'cfslider-m2'},
   m3:{pro:'cfpro-m3',raw:'cfraw-m3',wave:'cfwave-m3',play:'cfplay-m3',scrub:'cfscrub-m3',time:'cftime-m3',slider:'cfslider-m3'}
