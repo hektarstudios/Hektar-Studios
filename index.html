@@ -959,9 +959,9 @@
       <div class="portfolio-thumb" style="background-image:url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800&q=80')"><div class="portfolio-thumb-label">Film BGM</div></div>
       <div class="portfolio-overlay"><div class="portfolio-track">Film BGM</div><div class="portfolio-name">Films scored</div><div class="portfolio-role">Click to watch →</div></div>
     </div>
-    <div class="portfolio-item reveal reveal-delay-3" data-portfolio="process">
-      <div class="portfolio-thumb" style="background-image:url('https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=800&q=80')"><div class="portfolio-thumb-label">The Process</div></div>
-      <div class="portfolio-overlay"><div class="portfolio-track">The Process</div><div class="portfolio-name">Behind the sessions</div><div class="portfolio-role">Click to watch →</div></div>
+    <div class="portfolio-item reveal reveal-delay-3" data-portfolio="audio-services">
+      <div class="portfolio-thumb" style="background-image:url('https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&q=80')"><div class="portfolio-thumb-label">Audiobook & Voiceovers</div></div>
+      <div class="portfolio-overlay"><div class="portfolio-track">Audiobook · Audio Guides · Voiceovers</div><div class="portfolio-name">Hektar Studios</div><div class="portfolio-role">Click to listen →</div></div>
     </div>
   </div>
 </section>
@@ -1040,15 +1040,94 @@
     </div>
   </div>
 </div>
-<div class="portfolio-modal-backdrop" id="pm-process">
+<div class="portfolio-modal-backdrop" id="pm-audio-services">
   <div class="portfolio-modal">
-    <div class="pm-header"><div class="pm-title">The Process</div><button class="pm-close">×</button></div>
-    <div class="pm-body">
-      <a class="yt-card" href="https://www.youtube.com/watch?v=SHOWREEL_ID" target="_blank" rel="noopener" style="margin-bottom:16px;">
-        <img class="yt-thumb" src="https://img.youtube.com/vi/SHOWREEL_ID/hqdefault.jpg" alt="The Process — Behind the scenes at Hektar Studios" />
-        <div class="yt-play"><div class="yt-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
-      </a>
-      <p style="font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;">A look inside how Hektar Studios works — the conversations, the sessions, the patience, the craft.</p>
+    <div class="pm-header"><div class="pm-title">Audiobook, Audio Guides & Voiceovers</div><button class="pm-close">×</button></div>
+        <div class="pm-body" style="padding:0 0 8px;">
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Ram Kumar MAP Exhibit · Abstract Art</div><div class="track-title" style="font-size:13px;">We don't end at our edges</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ag1" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ag1">
+            <div class="crossfade-waveform" id="avwave-ag1"></div>
+            <div class="cf-playhead" id="avplay-ag1" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ag1" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ag1" src="Audio/ag1.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Folk Art</div><div class="track-title" style="font-size:13px;">MAP Exhibit 1</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ag2" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ag2">
+            <div class="crossfade-waveform" id="avwave-ag2"></div>
+            <div class="cf-playhead" id="avplay-ag2" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ag2" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ag2" src="Audio/ag2.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Folk Art</div><div class="track-title" style="font-size:13px;">Ticket Tika Chaap Exhibit</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ag3" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ag3">
+            <div class="crossfade-waveform" id="avwave-ag3"></div>
+            <div class="cf-playhead" id="avplay-ag3" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ag3" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ag3" src="Audio/ag3.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Poetry · Cinematic</div><div class="track-title" style="font-size:13px;">Voiceover Sample</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="vo1" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="vo1">
+            <div class="crossfade-waveform" id="avwave-vo1"></div>
+            <div class="cf-playhead" id="avplay-vo1" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-vo1" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-vo1" src="Audio/vo1.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">English · Drama</div><div class="track-title" style="font-size:13px;">Audiobook Sample 1</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ab1" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ab1">
+            <div class="crossfade-waveform" id="avwave-ab1"></div>
+            <div class="cf-playhead" id="avplay-ab1" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ab1" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ab1" src="Audio/ab1.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:2px;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Hindi · Romantic</div><div class="track-title" style="font-size:13px;">Audiobook Sample 2</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ab2" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ab2">
+            <div class="crossfade-waveform" id="avwave-ab2"></div>
+            <div class="cf-playhead" id="avplay-ab2" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ab2" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ab2" src="Audio/ab2.mp3"></audio>
+      </div>
+      <div class="audio-track" style="margin-bottom:0;">
+        <div class="track-meta" style="padding:6px 0 4px;"><div><div class="track-artist" style="font-size:10px;">Kannada · Drama</div><div class="track-title" style="font-size:13px;">Audiobook Sample 3</div></div></div>
+        <div class="crossfade-ui" style="padding:8px 12px;">
+          <button class="play-btn" data-simple="ab3" style="width:32px;height:32px;flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+          <div style="flex:1;position:relative;height:32px;cursor:pointer;" class="simple-waveform-wrap" data-av-id="ab3">
+            <div class="crossfade-waveform" id="avwave-ab3"></div>
+            <div class="cf-playhead" id="avplay-ab3" style="position:absolute;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,0.7);pointer-events:none;z-index:3;left:0%;display:none;"></div>
+          </div>
+          <span class="cf-time" id="avtime-ab3" style="font-size:10px;min-width:28px;text-align:right;">0:00</span>
+        </div>
+        <audio id="avtrack-ab3" src="Audio/ab3.mp3"></audio>
+      </div>
     </div>
   </div>
 </div>
@@ -1256,7 +1335,7 @@ document.querySelectorAll('.portfolio-item').forEach(item=>{
   });
 });
 document.querySelectorAll('.pm-close').forEach(btn=>{
-  btn.addEventListener('click',()=>{btn.closest('.portfolio-modal-backdrop').classList.remove('open');document.body.style.overflow='';});
+  btn.addEventListener('click',()=>{btn.closest('.portfolio-modal-backdrop').classList.remove('open');document.body.style.overflow='';stopAllCF();stopAV();});
 });
 document.querySelectorAll('.portfolio-modal-backdrop').forEach(bd=>{
   bd.addEventListener('click',e=>{if(e.target===bd){bd.classList.remove('open');document.body.style.overflow='';}});
@@ -1552,6 +1631,101 @@ document.querySelectorAll('.crossfade-waveform-wrap[data-cf-id]').forEach(wrap =
   });
 });
 
+
+/* ── Simple audio player (Audiobook / Voiceover modal) ── */
+const avIds = ['ab1','ab2','ab3','ag1','ag2','ag3','vo1'];
+
+/* Build waveform bars */
+avIds.forEach(id => {
+  const wc = document.getElementById('avwave-' + id); if (!wc) return;
+  for (let i = 0; i < 60; i++) {
+    const b = document.createElement('div'); b.className = 'cf-bar';
+    b.style.height = (16 + Math.random() * 70) + '%';
+    b.style.background = 'rgba(107,101,96,0.3)';
+    wc.appendChild(b);
+  }
+});
+
+let activeAV = null;
+const playIconAV  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+const pauseIconAV = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+function renderAVWave(id, pct) {
+  const bars = document.querySelectorAll('#avwave-' + id + ' .cf-bar');
+  if (!bars.length) return;
+  const N = bars.length, played = Math.floor(pct * N);
+  bars.forEach((b, i) => {
+    b.style.background = i < played ? 'rgba(232,245,66,0.9)' : 'rgba(107,101,96,0.28)';
+  });
+  const ph = document.getElementById('avplay-' + id);
+  if (ph) { ph.style.display = 'block'; ph.style.left = (pct * 100) + '%'; }
+}
+
+function stopAV() {
+  if (!activeAV) return;
+  activeAV.audio.pause(); activeAV.audio.currentTime = 0;
+  if (activeAV.raf) cancelAnimationFrame(activeAV.raf);
+  const btn = document.querySelector('.play-btn[data-simple="' + activeAV.id + '"]');
+  if (btn) { btn.innerHTML = playIconAV; btn.classList.remove('playing'); }
+  document.getElementById('avtime-' + activeAV.id).textContent = '0:00';
+  renderAVWave(activeAV.id, 0);
+  const ph = document.getElementById('avplay-' + activeAV.id);
+  if (ph) ph.style.display = 'none';
+  activeAV = null;
+}
+
+document.querySelectorAll('.play-btn[data-simple]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.dataset.simple;
+    const audio = document.getElementById('avtrack-' + id);
+    if (!audio) return;
+    if (activeAV && activeAV.id === id) {
+      if (activeAV.paused) {
+        audio.play().catch(() => {});
+        activeAV.paused = false;
+        btn.innerHTML = pauseIconAV; btn.classList.add('playing');
+        function resumeAV() {
+          if (!activeAV || activeAV.paused) return;
+          const pct = audio.duration ? audio.currentTime / audio.duration : 0;
+          renderAVWave(id, pct);
+          document.getElementById('avtime-' + id).textContent = fmtTime(audio.currentTime);
+          activeAV.raf = requestAnimationFrame(resumeAV);
+        }
+        activeAV.raf = requestAnimationFrame(resumeAV);
+      } else {
+        audio.pause();
+        if (activeAV.raf) cancelAnimationFrame(activeAV.raf);
+        activeAV.paused = true;
+        btn.innerHTML = playIconAV; btn.classList.remove('playing');
+      }
+      return;
+    }
+    stopAV();
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+    btn.innerHTML = pauseIconAV; btn.classList.add('playing');
+    activeAV = { id, audio, raf: null, paused: false };
+    function tick() {
+      const pct = audio.duration ? audio.currentTime / audio.duration : 0;
+      renderAVWave(id, pct);
+      document.getElementById('avtime-' + id).textContent = fmtTime(audio.currentTime);
+      activeAV.raf = requestAnimationFrame(tick);
+    }
+    activeAV.raf = requestAnimationFrame(tick);
+    audio.onended = () => { if (activeAV && activeAV.id === id) stopAV(); };
+  });
+});
+
+/* Click waveform to seek */
+document.querySelectorAll('.simple-waveform-wrap[data-av-id]').forEach(wrap => {
+  wrap.addEventListener('click', e => {
+    const id = wrap.dataset.avId;
+    if (!activeAV || activeAV.id !== id) return;
+    const rect = wrap.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (activeAV.audio.duration) activeAV.audio.currentTime = pct * activeAV.audio.duration;
+  });
+});
 
 /* ── Escape key closes all modals ── */
 document.addEventListener('keydown',e=>{
