@@ -34,72 +34,150 @@
   <!-- ══ STRUCTURED DATA — Local Music Business (Schema.org) ══════
        This tells Google you are a local business so you appear in
        "music studios near me" and "music production Bengaluru" searches -->
+  <!-- ═══════════════════════════════════════════════════════════════
+       SEO — Structured Data (JSON-LD)
+       Tells Google what Hektar Studios is, what it offers, who runs
+       it, and where to find it — enabling rich search snippets and
+       a potential Knowledge Panel.
+       ═══════════════════════════════════════════════════════════════ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    "name": "Hektar Studios",
-    "url": "https://www.hektarstudios.com",
-    "logo": "https://www.hektarstudios.com/logo-cropped.png",
-    "description": "Bengaluru-based music production studio offering recording, mixing, mastering and film BGM scoring. Artist-first, no revision limits.",
-    "foundingDate": "2023",
-    "founder": {
-      "@type": "Person",
-      "name": "Nahush Kumar"
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Bengaluru",
-      "addressRegion": "Karnataka",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "addressCountry": "IN",
-      "addressRegion": "Karnataka",
-      "addressLocality": "Bengaluru"
-    },
-    "sameAs": [
-      "https://instagram.com/hektarstudios",
-      "https://youtube.com/@hektarstudios",
-      "https://facebook.com/hektarstudios"
-    ],
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Studio Services",
-      "itemListElement": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Music Production" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Mixing" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Mastering" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Film Background Music (BGM)" } }
-      ]
-    },
-    "review": [
+    "@graph": [
       {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Naveen Tejaswi" },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-        "reviewBody": "Nahush is not only a fantastic producer but also an incredible musician with exceptional vocal and guitar skills."
+        "@type": "LocalBusiness",
+        "@id": "https://www.hektarstudios.com/#business",
+        "name": "Hektar Studios",
+        "url": "https://www.hektarstudios.com",
+        "logo": "https://www.hektarstudios.com/logo-cropped.png",
+        "image": "https://www.hektarstudios.com/og-image.jpg",
+        "description": "Bengaluru-based music production studio offering recording, mixing, mastering and film BGM scoring. Artist-first, no revision limits. Founded by Nahush Kumar.",
+        "foundingDate": "2023",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Bengaluru",
+          "addressRegion": "Karnataka",
+          "addressCountry": "IN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "addressCountry": "IN",
+          "addressRegion": "Karnataka"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Bengaluru" },
+          { "@type": "Country", "name": "India" }
+        ],
+        "founder": {
+          "@type": "Person",
+          "@id": "https://www.nahushkumar.com/#nahush",
+          "name": "Nahush Kumar",
+          "url": "https://www.nahushkumar.com"
+        },
+        "sameAs": [
+          "https://www.instagram.com/hektarstudios",
+          "https://www.youtube.com/@hektarstudios",
+          "https://www.facebook.com/hektarstudios"
+        ],
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Support",
+          "availableLanguage": ["English", "Hindi", "Kannada"],
+          "url": "https://www.hektarstudios.com/#contact"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Music Production Services",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Music Production",
+                "description": "Full music production from melody to arrangement — beat design, composition, live instrumentation and arrangement."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Mixing",
+                "description": "Professional audio mixing — balancing frequencies, dynamics and space so your track breathes and hits exactly right."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Mastering",
+                "description": "Final audio mastering for Spotify, Apple Music, YouTube and beyond. Broadcast-ready, distribution-ready output."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Film BGM Scoring",
+                "description": "Background music scoring for films, short films and digital content. Scores, atmospheres and soundscapes built to serve the story."
+              }
+            }
+          ]
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "ratingCount": "6",
+          "reviewCount": "6"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Naveen Tejaswi" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Nahush is not only a fantastic producer but also an incredible musician with exceptional vocal and guitar skills. His keen attention to detail, openness to new ideas and deep musical sensibility set him apart."
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Sandeep Srikumar" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Loved working with Hektar Studios for production of my songs and couldn't have asked for a better place. My songs wouldn't have seen light had not been for this!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Rishabh Vyas" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "The place is very comfortable and Nahush bhaiya is super talented in all spheres — singing, production, mixing and mastering. He has been as enthusiastic about the song as much as I was!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Tulakar Jha" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Working with Nahush bhai has been such an enriching experience. I found tremendous ease communicating my compositions and achieved unique and emotionally expressive results."
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Shashwat Pandey" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "With Nahush, the song making process becomes so easy that you are able to bring out the best version of your composition. Worked with him on a couple of projects, and now I can't think of going to another studio."
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Saroj Kashyap" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "He asked all the right questions and offered great inputs at every step, handling the entire track end to end with ease and professionalism. The final result exceeded my expectations."
+          }
+        ]
       },
       {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Rishabh Vyas" },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-        "reviewBody": "Nahush bhaiya is super talented in all spheres — singing, production, mixing and mastering."
-      },
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Shashwat Pandey" },
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
-        "reviewBody": "With Nahush, the song making process becomes so easy that you are able to bring out the best version of your composition."
+        "@type": "WebSite",
+        "@id": "https://www.hektarstudios.com/#website",
+        "url": "https://www.hektarstudios.com",
+        "name": "Hektar Studios",
+        "description": "Music production, mixing, mastering and film BGM studio in Bengaluru. Founded by Nahush Kumar.",
+        "publisher": { "@id": "https://www.hektarstudios.com/#business" }
       }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5",
-      "reviewCount": "6",
-      "bestRating": "5"
-    }
+    ]
   }
   </script>
 
@@ -1811,5 +1889,6 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
   });
 });
 </script>
+
 </body>
 </html>
