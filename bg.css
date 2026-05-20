@@ -1,4 +1,4 @@
-    html { background:#0a0908; }
+html { background:#0a0908; }
     body { background: transparent !important; }
 
     /* Stage — sits behind everything */
@@ -225,17 +225,17 @@
       pointer-events: none;
     }
 
-    /* ── Section background overrides — lighter scrims so parallax stays alive ── */
-    #hero          { background: linear-gradient(180deg, rgba(10,9,8,0.45) 0%, rgba(10,9,8,0.35) 50%, rgba(10,9,8,0.65) 100%) !important; }
-    #about         { background: rgba(15,14,11,0.66) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
-    #services      { background: rgba(10,9,8,0.58) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
-    #audio         { background: rgba(15,14,11,0.66) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
-    #portfolio     { background: rgba(10,9,8,0.58) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
-    #testimonials  { background: rgba(15,14,11,0.62) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
-    #freebie       { background: rgba(10,9,8,0.55) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
-    #contact       { background: rgba(10,9,8,0.62) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
-    footer         { background: rgba(15,14,11,0.78) !important; backdrop-filter: blur(4px);   -webkit-backdrop-filter: blur(4px); }
-    nav.scrolled   { background: rgba(10,9,8,0.72) !important; }
+    /* ── Section background overrides — semi-transparent so parallax bleeds through ── */
+    #hero          { background: linear-gradient(180deg, rgba(10,9,8,0.45) 0%, rgba(10,9,8,0.25) 50%, rgba(10,9,8,0.65) 100%) !important; }
+    #about         { background: rgba(15,14,11,0.70) !important; }
+    #services      { background: rgba(10,9,8,0.62) !important; }
+    #audio         { background: rgba(15,14,11,0.70) !important; }
+    #portfolio     { background: rgba(10,9,8,0.62) !important; }
+    #testimonials  { background: rgba(15,14,11,0.66) !important; }
+    #freebie       { background: rgba(10,9,8,0.60) !important; }
+    #contact       { background: rgba(10,9,8,0.66) !important; }
+    footer         { background: rgba(15,14,11,0.82) !important; }
+    nav.scrolled   { background: rgba(10,9,8,0.92) !important; }
 
     /* Reduced motion + mobile */
     @media (prefers-reduced-motion: reduce) {
