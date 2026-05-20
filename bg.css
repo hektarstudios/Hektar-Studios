@@ -19,7 +19,7 @@ html { background:#0a0908; }
       filter: blur(14px) saturate(1.2) brightness(0.5) contrast(1.1);
       transform: translate3d(0, var(--photoTY, 0), 0) scale(var(--photoScale, 1.18));
       transform-origin: center;
-      will-change: transform, background-position, filter, opacity;
+      will-change: transform, opacity;
       opacity: 0.78;
       transition: filter .6s ease;
     }
@@ -29,8 +29,8 @@ html { background:#0a0908; }
       animation: photoBreathe 8s ease-in-out infinite alternate;
     }
     @keyframes photoBreathe {
-      0%   { opacity: 0.74; filter: blur(6px) saturate(1.10) brightness(0.46) contrast(1.10); }
-      100% { opacity: 0.88; filter: blur(5px) saturate(1.25) brightness(0.56) contrast(1.15); }
+      0%   { opacity: 0.72; }
+      100% { opacity: 0.88; }
     }
 
     /* Vignette + scrim keep type readable */
@@ -85,7 +85,7 @@ html { background:#0a0908; }
       border-radius: 50%;
       filter: blur(55px);
       mix-blend-mode: screen;
-      will-change: transform, opacity;
+      will-change: opacity;
     }
     .sbg-blob.b-orange   { background: radial-gradient(circle, #E66323 0%, transparent 65%); }
     .sbg-blob.b-orange-d { background: radial-gradient(circle, #8B2C12 0%, transparent 65%); }
@@ -95,15 +95,15 @@ html { background:#0a0908; }
     .sbg-blob.b-magenta  { background: radial-gradient(circle, #CC44FF 0%, transparent 65%); }
     .sbg-blob.b-yellow   { background: radial-gradient(circle, #E8F542 0%, transparent 60%); }
 
-    /* Each blob breathes (opacity + scale pulses), independently */
+    /* Each blob breathes via opacity only — transform on filtered elements forces rasterization */
     .sbg-blob.pulse-a { animation: blobPulseA 7s ease-in-out infinite alternate; }
     .sbg-blob.pulse-b { animation: blobPulseB 9.5s ease-in-out infinite alternate; }
     .sbg-blob.pulse-c { animation: blobPulseC 11s ease-in-out infinite alternate; }
     .sbg-blob.pulse-d { animation: blobPulseD 13s ease-in-out infinite alternate; }
-    @keyframes blobPulseA { 0%{ opacity:0.28; transform:scale(0.95) translate(0,0);}  100%{ opacity:0.58; transform:scale(1.12) translate(3vw,-2vh);} }
-    @keyframes blobPulseB { 0%{ opacity:0.22; transform:scale(1.00) translate(0,0);}  100%{ opacity:0.50; transform:scale(1.15) translate(-3vw,3vh);} }
-    @keyframes blobPulseC { 0%{ opacity:0.38; transform:scale(1.05) translate(0,0);}  100%{ opacity:0.18; transform:scale(0.90) translate(2vw,2vh);} }
-    @keyframes blobPulseD { 0%{ opacity:0.20; transform:scale(0.92) translate(0,0);}  100%{ opacity:0.45; transform:scale(1.10) translate(-2vw,-3vh);} }
+    @keyframes blobPulseA { 0%{ opacity:0.22; } 100%{ opacity:0.52; } }
+    @keyframes blobPulseB { 0%{ opacity:0.18; } 100%{ opacity:0.46; } }
+    @keyframes blobPulseC { 0%{ opacity:0.32; } 100%{ opacity:0.16; } }
+    @keyframes blobPulseD { 0%{ opacity:0.16; } 100%{ opacity:0.42; } }
 
     /* ── Neon "HEKTAR" sign ghost — pulses + flickers near hero only ── */
     .sbg-neon {
