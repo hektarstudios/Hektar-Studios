@@ -1,0 +1,251 @@
+    html { background:#0a0908; }
+    body { background: transparent !important; }
+
+    /* Stage — sits behind everything */
+    .studio-bg {
+      position: fixed; inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      contain: strict;
+    }
+
+    /* ── Photo layer — pans horizontally across the studio as you scroll ── */
+    .studio-bg__photo {
+      position: absolute; inset: -12%;
+      background-image: url('assets/studio-tiny.jpg');
+      background-size: cover;
+      background-position: var(--photoX, 65%) var(--photoY, 50%);
+      filter: blur(14px) saturate(1.2) brightness(0.5) contrast(1.1);
+      transform: translate3d(0, var(--photoTY, 0), 0) scale(var(--photoScale, 1.18));
+      transform-origin: center;
+      will-change: transform, background-position, filter, opacity;
+      opacity: 0.78;
+      transition: filter .6s ease;
+    }
+    .studio-bg__photo.is-loaded {
+      filter: blur(6px) saturate(1.1) brightness(0.5) contrast(1.1);
+      /* Slow opacity + filter breath (8s) — paired with JS scale breath below */
+      animation: photoBreathe 8s ease-in-out infinite alternate;
+    }
+    @keyframes photoBreathe {
+      0%   { opacity: 0.74; filter: blur(6px) saturate(1.10) brightness(0.46) contrast(1.10); }
+      100% { opacity: 0.88; filter: blur(5px) saturate(1.25) brightness(0.56) contrast(1.15); }
+    }
+
+    /* Vignette + scrim keep type readable */
+    .studio-bg__vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 100% 80% at 50% 45%,
+        transparent 0%, rgba(10,9,8,0.40) 60%, rgba(10,9,8,0.85) 100%);
+    }
+    .studio-bg__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg,
+        rgba(10,9,8,0.45) 0%,
+        rgba(10,9,8,0.25) 25%,
+        rgba(10,9,8,0.35) 60%,
+        rgba(10,9,8,0.65) 100%);
+    }
+    /* Subtle warm/cool grade (warm wall left, blue neon right) */
+    .studio-bg__grade {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 12% 50%, rgba(220,100,40,0.22), transparent 65%),
+        radial-gradient(ellipse 60% 50% at 88% 22%, rgba(58,142,255,0.22), transparent 65%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+    }
+
+    /* ── Scroll spotlight — a soft warm cone that follows your scroll position ── */
+    .sbg-spotlight {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle 55vh at var(--spotX, 50%) var(--spotY, 50%),
+          rgba(255, 180, 90, 0.20) 0%,
+          rgba(255, 180, 90, 0.08) 30%,
+          transparent 60%),
+        radial-gradient(circle 35vh at var(--spotX2, 50%) var(--spotY2, 50%),
+          rgba(120, 180, 255, 0.18) 0%,
+          rgba(120, 180, 255, 0.06) 35%,
+          transparent 65%);
+      mix-blend-mode: screen;
+    }
+
+    /* ── Flowing blob layer — distributed across the full document, parallax-scrolled ── */
+    .sbg-flow {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 100vh; /* JS sets to document height */
+      transform: translate3d(0, var(--flowY, 0), 0);
+      will-change: transform;
+    }
+    .sbg-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(95px);
+      mix-blend-mode: screen;
+      will-change: transform, opacity;
+    }
+    .sbg-blob.b-orange   { background: radial-gradient(circle, #E66323 0%, transparent 65%); }
+    .sbg-blob.b-orange-d { background: radial-gradient(circle, #8B2C12 0%, transparent 65%); }
+    .sbg-blob.b-blue     { background: radial-gradient(circle, #2D8FFF 0%, transparent 60%); }
+    .sbg-blob.b-blue-d   { background: radial-gradient(circle, #1A4FA8 0%, transparent 65%); }
+    .sbg-blob.b-tungsten { background: radial-gradient(circle, #FFCB6B 0%, transparent 65%); }
+    .sbg-blob.b-magenta  { background: radial-gradient(circle, #CC44FF 0%, transparent 65%); }
+    .sbg-blob.b-yellow   { background: radial-gradient(circle, #E8F542 0%, transparent 60%); }
+
+    /* Each blob breathes (opacity + scale pulses), independently */
+    .sbg-blob.pulse-a { animation: blobPulseA 7s ease-in-out infinite alternate; }
+    .sbg-blob.pulse-b { animation: blobPulseB 9.5s ease-in-out infinite alternate; }
+    .sbg-blob.pulse-c { animation: blobPulseC 11s ease-in-out infinite alternate; }
+    .sbg-blob.pulse-d { animation: blobPulseD 13s ease-in-out infinite alternate; }
+    @keyframes blobPulseA { 0%{ opacity:0.28; transform:scale(0.95) translate(0,0);}  100%{ opacity:0.58; transform:scale(1.12) translate(3vw,-2vh);} }
+    @keyframes blobPulseB { 0%{ opacity:0.22; transform:scale(1.00) translate(0,0);}  100%{ opacity:0.50; transform:scale(1.15) translate(-3vw,3vh);} }
+    @keyframes blobPulseC { 0%{ opacity:0.38; transform:scale(1.05) translate(0,0);}  100%{ opacity:0.18; transform:scale(0.90) translate(2vw,2vh);} }
+    @keyframes blobPulseD { 0%{ opacity:0.20; transform:scale(0.92) translate(0,0);}  100%{ opacity:0.45; transform:scale(1.10) translate(-2vw,-3vh);} }
+
+    /* ── Neon "HEKTAR" sign ghost — pulses + flickers near hero only ── */
+    .sbg-neon {
+      position: absolute;
+      top: 9vh; right: 5vw;
+      font-family: 'Arial Black', Impact, sans-serif;
+      font-size: clamp(38px, 5.4vw, 92px);
+      line-height: 0.88;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      text-align: right;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(80, 170, 255, 0.6);
+      text-shadow:
+        0 0 8px rgba(58, 142, 255, 0.45),
+        0 0 24px rgba(58, 142, 255, 0.35),
+        0 0 60px rgba(58, 142, 255, 0.25);
+      animation: neonFlicker 6s steps(1, end) infinite, neonBreathe 4.5s ease-in-out infinite alternate;
+      transform: translate3d(0, var(--neonY, 0), 0) rotate(-1deg);
+      transform-origin: 100% 50%;
+      will-change: transform, opacity;
+      opacity: 0.48;
+      mix-blend-mode: screen;
+    }
+    .sbg-neon span { display:block; }
+    @keyframes neonBreathe {
+      0%   { text-shadow: 0 0 8px rgba(58,142,255,0.45), 0 0 24px rgba(58,142,255,0.30), 0 0 60px rgba(58,142,255,0.20); }
+      100% { text-shadow: 0 0 12px rgba(58,142,255,0.65), 0 0 36px rgba(58,142,255,0.45), 0 0 90px rgba(58,142,255,0.35); }
+    }
+    @keyframes neonFlicker {
+      0%,4%,9%,12%,18%,100% { opacity: 0.48; }
+      5%,8%   { opacity: 0.20; }
+      10%,11% { opacity: 0.06; }
+      13%     { opacity: 0.56; }
+      14%     { opacity: 0.20; }
+      15%,17% { opacity: 0.50; }
+    }
+
+    /* ── Sound rings emanating from the neon source ── */
+    .sbg-rings {
+      position: absolute;
+      top: 0; right: 0;
+      width: 80vw; height: 80vh;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+    .sbg-rings circle { transform-origin: 720px 160px; }
+    .sbg-ring--1 { animation: ringPulse 4s ease-out infinite; }
+    .sbg-ring--2 { animation: ringPulse 4s ease-out infinite 1.3s; }
+    .sbg-ring--3 { animation: ringPulse 4s ease-out infinite 2.6s; }
+    @keyframes ringPulse {
+      0%   { transform: scale(0.35); opacity: 0.6; }
+      80%  { opacity: 0.05; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    /* ── Traveling sound waves — full-viewport SVG, drift up with scroll ── */
+    .sbg-waves {
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      width: 100%; height: 100%;
+      opacity: 0.75;
+      transform: translate3d(0, var(--wavesY, 0), 0);
+      will-change: transform;
+    }
+    .sbg-waves path { fill: none; stroke-linecap: round; }
+    .sbg-wave-track {
+      stroke: rgba(120, 180, 255, 0.10);
+      stroke-width: 1;
+    }
+    .sbg-wave-flow {
+      stroke: rgba(232, 245, 66, 0.55);
+      stroke-width: 1.5;
+      stroke-dasharray: 14 4000;
+      filter: drop-shadow(0 0 4px rgba(232,245,66,0.55));
+      animation: wavePulse 14s linear infinite;
+    }
+    .sbg-wave-flow.w-blue   { stroke: rgba(80,170,255,0.55);  filter: drop-shadow(0 0 4px rgba(80,170,255,0.5)); }
+    .sbg-wave-flow.w-orange { stroke: rgba(255,130,60,0.50);  filter: drop-shadow(0 0 4px rgba(255,130,60,0.5)); }
+    .sbg-wave-flow.w-magenta{ stroke: rgba(204,68,255,0.45);  filter: drop-shadow(0 0 4px rgba(204,68,255,0.5)); }
+    .sbg-wave-flow.delay-1 { animation-duration: 18s; animation-delay: -4s; }
+    .sbg-wave-flow.delay-2 { animation-duration: 22s; animation-delay: -9s; }
+    .sbg-wave-flow.delay-3 { animation-duration: 16s; animation-delay: -2s; }
+    .sbg-wave-flow.delay-4 { animation-duration: 24s; animation-delay: -12s; }
+    .sbg-wave-flow.delay-5 { animation-duration: 20s; animation-delay: -6s; }
+    @keyframes wavePulse { from { stroke-dashoffset: 4014; } to { stroke-dashoffset: 0; } }
+
+    /* ── Floating particles (faint music dust) ── */
+    .sbg-particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: rgba(232,245,66,0.65);
+      box-shadow: 0 0 6px rgba(232,245,66,0.8);
+      opacity: 0;
+      animation: particleRise linear infinite;
+    }
+    .sbg-particle.p--blue {
+      background: rgba(120,180,255,0.7);
+      box-shadow: 0 0 6px rgba(120,180,255,0.9);
+    }
+    .sbg-particle.p--orange {
+      background: rgba(255,150,80,0.7);
+      box-shadow: 0 0 6px rgba(255,150,80,0.9);
+    }
+    @keyframes particleRise {
+      0%   { transform: translate3d(0, 30px, 0); opacity: 0; }
+      10%  { opacity: 0.9; }
+      90%  { opacity: 0.9; }
+      100% { transform: translate3d(var(--drift, 20px), -80vh, 0); opacity: 0; }
+    }
+
+    /* ── Final film grain on top of everything bg-related ── */
+    .studio-bg__grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='gn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23gn)' opacity='0.5'/%3E%3C/svg%3E");
+      opacity: 0.18;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    /* ── Section background overrides — lighter scrims so parallax stays alive ── */
+    #hero          { background: linear-gradient(180deg, rgba(10,9,8,0.45) 0%, rgba(10,9,8,0.35) 50%, rgba(10,9,8,0.65) 100%) !important; }
+    #about         { background: rgba(15,14,11,0.66) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
+    #services      { background: rgba(10,9,8,0.58) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
+    #audio         { background: rgba(15,14,11,0.66) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
+    #portfolio     { background: rgba(10,9,8,0.58) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
+    #testimonials  { background: rgba(15,14,11,0.62) !important; backdrop-filter: blur(2.5px); -webkit-backdrop-filter: blur(2.5px); }
+    #freebie       { background: rgba(10,9,8,0.55) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
+    #contact       { background: rgba(10,9,8,0.62) !important; backdrop-filter: blur(2px);   -webkit-backdrop-filter: blur(2px); }
+    footer         { background: rgba(15,14,11,0.78) !important; backdrop-filter: blur(4px);   -webkit-backdrop-filter: blur(4px); }
+    nav.scrolled   { background: rgba(10,9,8,0.72) !important; }
+
+    /* Reduced motion + mobile */
+    @media (prefers-reduced-motion: reduce) {
+      .sbg-blob, .sbg-neon, .sbg-ring--1, .sbg-ring--2, .sbg-ring--3, .sbg-particle, .sbg-wave-flow, .studio-bg__photo { animation: none !important; }
+    }
+    @media (max-width: 768px) {
+      .studio-bg__photo { filter: blur(10px) saturate(1.05) brightness(0.45) contrast(1.1); }
+      .sbg-neon { display: none; }
+      .sbg-blob { filter: blur(60px); }
+      #about, #services, #audio, #portfolio, #testimonials, #freebie, #contact, footer {
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+      }
+    }
