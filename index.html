@@ -683,14 +683,90 @@
     /* #10 & #11: large screen fixes */
     @media(min-width:1400px){.service-card{min-height:380px;}}
   </style>
+
+  <link rel="stylesheet" href="bg.css" />
+
+  <link rel="stylesheet" href="polish.css" />
 </head>
 <body>
 
+<!-- ══ STUDIO BACKGROUND — scroll-reactive parallax layer ══════════════════ -->
+<div class="studio-bg" aria-hidden="true">
+  <div class="studio-bg__photo" id="sbgPhoto"></div>
+  <div class="studio-bg__vignette"></div>
+  <div class="studio-bg__grade"></div>
+  <div class="studio-bg__scrim"></div>
 
+  <!-- Soft scroll-following spotlight cone -->
+  <div class="sbg-spotlight" id="sbgSpotlight"></div>
+
+  <!-- Flowing color-bleed blobs distributed across the whole document -->
+  <div class="sbg-flow" id="sbgFlow">
+    <div class="sbg-blob b-orange   pulse-a" style="width:64vw;height:64vw;left:-18vw;top:0%;"></div>
+    <div class="sbg-blob b-blue     pulse-b" style="width:50vw;height:50vw;right:-14vw;top:0%;"></div>
+    <div class="sbg-blob b-tungsten pulse-c" style="width:34vw;height:34vw;left:42vw;top:6%;"></div>
+    <div class="sbg-blob b-orange   pulse-b" style="width:42vw;height:42vw;left:8vw;top:12%;"></div>
+    <div class="sbg-blob b-blue     pulse-d" style="width:46vw;height:46vw;right:-8vw;top:16%;"></div>
+    <div class="sbg-blob b-magenta  pulse-c" style="width:40vw;height:40vw;left:26vw;top:24%;"></div>
+    <div class="sbg-blob b-yellow   pulse-a" style="width:36vw;height:36vw;right:6vw;top:31%;"></div>
+    <div class="sbg-blob b-orange-d pulse-b" style="width:48vw;height:48vw;left:-10vw;top:38%;"></div>
+    <div class="sbg-blob b-tungsten pulse-d" style="width:34vw;height:34vw;left:54vw;top:44%;"></div>
+    <div class="sbg-blob b-blue-d   pulse-a" style="width:44vw;height:44vw;right:-6vw;top:51%;"></div>
+    <div class="sbg-blob b-orange   pulse-c" style="width:42vw;height:42vw;left:12vw;top:58%;"></div>
+    <div class="sbg-blob b-magenta  pulse-b" style="width:38vw;height:38vw;left:48vw;top:65%;"></div>
+    <div class="sbg-blob b-yellow   pulse-d" style="width:34vw;height:34vw;left:-6vw;top:72%;"></div>
+    <div class="sbg-blob b-blue     pulse-a" style="width:42vw;height:42vw;right:-10vw;top:78%;"></div>
+    <div class="sbg-blob b-tungsten pulse-c" style="width:36vw;height:36vw;left:30vw;top:85%;"></div>
+    <div class="sbg-blob b-orange-d pulse-b" style="width:46vw;height:46vw;left:6vw;top:91%;"></div>
+    <div class="sbg-blob b-blue-d   pulse-d" style="width:38vw;height:38vw;right:-4vw;top:96%;"></div>
+  </div>
+
+  <!-- Traveling sound-wave currents -->
+  <svg class="sbg-waves" viewBox="0 0 1440 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path class="sbg-wave-track"          d="M-50,180 Q360,80  720,180 T1490,180"/>
+    <path class="sbg-wave-flow delay-1"   d="M-50,180 Q360,80  720,180 T1490,180"/>
+    <path class="sbg-wave-track"          d="M-50,360 Q360,440 720,360 T1490,360"/>
+    <path class="sbg-wave-flow w-blue delay-2"  d="M-50,360 Q360,440 720,360 T1490,360"/>
+    <path class="sbg-wave-track"          d="M-50,540 Q360,460 720,540 T1490,540"/>
+    <path class="sbg-wave-flow w-orange delay-3" d="M-50,540 Q360,460 720,540 T1490,540"/>
+    <path class="sbg-wave-track"          d="M-50,720 Q360,800 720,720 T1490,720"/>
+    <path class="sbg-wave-flow w-magenta delay-4" d="M-50,720 Q360,800 720,720 T1490,720"/>
+    <path class="sbg-wave-track"          d="M-50,880 Q360,820 720,880 T1490,880"/>
+    <path class="sbg-wave-flow delay-5"   d="M-50,880 Q360,820 720,880 T1490,880"/>
+  </svg>
+
+  <!-- Neon hero ghost + sound rings -->
+  <div class="sbg-neon" id="sbgNeon"><span>HEKTAR</span><span>STUDIOS</span></div>
+  <svg class="sbg-rings" viewBox="0 0 800 800" preserveAspectRatio="none">
+    <circle class="sbg-ring--1" cx="720" cy="160" r="60" fill="none" stroke="rgba(58,142,255,0.6)"  stroke-width="1.5"/>
+    <circle class="sbg-ring--2" cx="720" cy="160" r="60" fill="none" stroke="rgba(58,142,255,0.45)" stroke-width="1"/>
+    <circle class="sbg-ring--3" cx="720" cy="160" r="60" fill="none" stroke="rgba(58,142,255,0.35)" stroke-width="1"/>
+  </svg>
+
+  <!-- (Particles removed) -->
+
+  <!-- Grain -->
+  <div class="studio-bg__grain"></div>
+</div>
+
+
+
+<!-- Now-playing mini bar (toggled by audio JS) -->
+<div class="now-playing" id="nowPlaying" aria-hidden="true">
+  <div class="np-eq"><i></i><i></i><i></i></div>
+  <div class="np-info" id="npInfo" title="Jump back to The Work">
+    <div class="np-title" id="npTitle">—</div>
+    <div class="np-artist" id="npArtist">—</div>
+  </div>
+  <button class="np-btn" id="npPlayBtn" aria-label="Play/Pause">
+    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+  </button>
+  <button class="np-close" id="npClose" aria-label="Stop playback">×</button>
+</div>
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo"><img src="logo-cropped.png" alt="Hektar Studios" class="nav-logo-img" /></a>
+  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Hektar Studios" class="nav-logo-img" /></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
@@ -744,11 +820,17 @@
     </p>
     <div class="hero-right">
       <div class="hero-stat reveal reveal-delay-1">
-        <div class="hero-stat-num">∞</div>
+        <div class="hero-stat-num">
+          <div class="hero-stat-infinity" aria-label="Infinite">
+            <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 28,20 C 28,8 42,8 50,20 C 58,32 72,32 72,20 C 72,8 58,8 50,20 C 42,32 28,32 28,20 Z" />
+            </svg>
+          </div>
+        </div>
         <div class="hero-stat-label">Revisions</div>
       </div>
       <div class="hero-stat reveal reveal-delay-2">
-        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-num"><span class="counter" data-target="4">0</span></div>
         <div class="hero-stat-label">Services</div>
       </div>
       <div class="hero-scroll reveal reveal-delay-3">
@@ -1323,10 +1405,10 @@
     <div>
       <div class="contact-form" id="contactForm">
         <div class="form-row">
-          <div class="form-group"><label class="form-label" for="name">Your name</label><input class="form-input" type="text" id="name" name="name" placeholder="What do we call you?" autocomplete="name"/></div>
-          <div class="form-group"><label class="form-label" for="email">Email</label><input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" autocomplete="email"/></div>
+          <div class="form-group form-float"><input class="form-input" type="text" id="name" name="name" placeholder=" " autocomplete="name"/><label class="form-label" for="name">Your name</label></div>
+          <div class="form-group form-float"><input class="form-input" type="email" id="email" name="email" placeholder=" " autocomplete="email"/><label class="form-label" for="email">Email</label></div>
         </div>
-        <div class="form-group"><label class="form-label" for="service">What brings you here?</label>
+        <div class="form-group form-float">
           <select class="form-select" id="service" name="service">
             <option value="" disabled selected>Choose a service</option>
             <option value="production">Music Production</option>
@@ -1335,8 +1417,9 @@
             <option value="film">Film BGM</option>
             <option value="other">Something else</option>
           </select>
+          <label class="form-label" for="service">What brings you here?</label>
         </div>
-        <div class="form-group"><label class="form-label" for="message">Tell us about your project</label><textarea class="form-textarea" id="message" name="message" placeholder="A voice note, a rough idea, a half-finished lyric — anything."></textarea></div>
+        <div class="form-group form-float"><textarea class="form-textarea" id="message" name="message" placeholder=" "></textarea><label class="form-label" for="message">Tell us about your project</label></div>
         <button class="form-submit" type="button" id="formSubmit">Send Message</button>
         <p class="form-note">We'll get back to you within 24 hours. Promise.</p>
       </div>
@@ -1353,7 +1436,7 @@
 <footer>
   <div class="footer-inner">
     <div style="display:flex;flex-direction:column;align-items:center;width:fit-content;">
-      <img src="logo-cropped.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;"/>
+      <img src="logo.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;"/>
       <div class="footer-tagline">Crafting Sound. Creating Soul.</div>
     </div>
     <div class="footer-hero-text">Artist First.<br>Always.</div>
@@ -1375,6 +1458,7 @@
   </div>
 </footer>
 
+<script src="bg.js" defer></script>
 <script>
 
 
@@ -1502,6 +1586,10 @@ function thumbAlignedPct(sliderId) {
 
 /* Render: bars + playhead + crossfade line */
 function renderWave(id, playPct, scrubPct) {
+  /* Update outer progress ring on the play button */
+  const _btn = document.querySelector('.play-btn[data-cf="' + id + '"]');
+  if (_btn) _btn.style.setProperty('--prog', (playPct * 100).toFixed(1));
+
   const bars = document.querySelectorAll('#' + cfDefs[id].wave + ' .cf-bar');
   if (!bars.length) return;
   const N = bars.length;
@@ -1581,6 +1669,9 @@ function syncAudios(cf) {
 
 function stopAllCF() {
   if (!activeCF) return;
+  /* Reset progress ring */
+  const _b = document.querySelector('.play-btn[data-cf="' + activeCF.id + '"]');
+  if (_b) _b.style.setProperty('--prog', 0);
   activeCF.proA.pause(); activeCF.proA.currentTime = 0;
   activeCF.rawA.pause(); activeCF.rawA.currentTime = 0;
   if (activeCF.raf) cancelAnimationFrame(activeCF.raf);
@@ -1736,6 +1827,9 @@ const playIconAV  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
 const pauseIconAV = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
 
 function renderAVWave(id, pct) {
+  const _btn = document.querySelector('.play-btn[data-simple="' + id + '"]');
+  if (_btn) _btn.style.setProperty('--prog', (pct * 100).toFixed(1));
+
   const bars = document.querySelectorAll('#avwave-' + id + ' .cf-bar');
   if (!bars.length) return;
   const N = bars.length, played = Math.floor(pct * N);
@@ -1748,6 +1842,8 @@ function renderAVWave(id, pct) {
 
 function stopAV() {
   if (!activeAV) return;
+  const _b = document.querySelector('.play-btn[data-simple="' + activeAV.id + '"]');
+  if (_b) _b.style.setProperty('--prog', 0);
   activeAV.audio.pause(); activeAV.audio.currentTime = 0;
   if (activeAV.raf) cancelAnimationFrame(activeAV.raf);
   const btn = document.querySelector('.play-btn[data-simple="' + activeAV.id + '"]');
@@ -1895,6 +1991,157 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     btn.disabled = false;
   });
 });
+
+/* studio background — see bg.js (loaded via <script src> below) */
+
+/* ══════════════════════════════════════════════════════════════════════
+   UI POLISH — progress bar, magnetic CTAs, card tilt, stat reveals,
+                select labels, now-playing mini-bar
+   ══════════════════════════════════════════════════════════════════════ */
+(function uiPolish(){
+  const canHover = window.matchMedia('(hover: hover)').matches;
+
+  /* ── Nav scroll-spy — underline activates as visitor scrolls through sections ── */
+  const navLinks = Array.from(document.querySelectorAll('.nav-links a:not(.nav-cta)'));
+  const sectionIds = ['about','services','audio','portfolio','testimonials'];
+  const sectionMap = sectionIds.map(id => ({ id, el: document.getElementById(id) })).filter(s => s.el);
+  function updateNavSpy() {
+    const scrollPos = window.scrollY + Math.max(120, window.innerHeight * 0.28);
+    let active = null;
+    for (const s of sectionMap) {
+      if (s.el.offsetTop <= scrollPos) active = s.id;
+    }
+    navLinks.forEach(a => {
+      a.classList.toggle('nav-active', a.getAttribute('href') === '#' + active);
+    });
+  }
+  window.addEventListener('scroll', updateNavSpy, { passive: true });
+  window.addEventListener('resize', updateNavSpy);
+  updateNavSpy();
+
+  /* ── Hero stat reveals: ∞ warp-draw + slot-machine counter ── */
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target || '0', 10);
+    const spinDur   = 900;   /* fast random-digit blur */
+    const settleDur = 600;   /* slow-down with decreasing wobble */
+    const start = performance.now();
+    el.classList.add('spinning');
+    (function step(now){
+      const elapsed = (now || performance.now()) - start;
+      if (elapsed < spinDur) {
+        /* pure random digits — vegas spin */
+        el.textContent = Math.floor(Math.random() * 10);
+        requestAnimationFrame(step);
+      } else if (elapsed < spinDur + settleDur) {
+        /* settle: oscillate around target with decreasing amplitude */
+        const t = (elapsed - spinDur) / settleDur;
+        const wobble = Math.max(0, (1 - t) * 4);
+        const v = Math.max(0, target + Math.round((Math.random() - 0.5) * 2 * wobble));
+        el.textContent = String(v);
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = String(target);
+        el.classList.remove('spinning');
+        el.classList.add('landed');
+        setTimeout(() => el.classList.remove('landed'), 400);
+      }
+    })(start);
+  }
+  const heroIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const inf = e.target.querySelector('.hero-stat-infinity');
+      if (inf) inf.classList.add('visible');
+      const ctr = e.target.querySelector('.counter');
+      if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
+      heroIO.unobserve(e.target);
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.hero-stat').forEach(el => heroIO.observe(el));
+
+  /* ── Select always shows floated label (prompt is first option) ── */
+  document.querySelectorAll('.form-float select').forEach(sel => {
+    const wrap = sel.closest('.form-float'); if (!wrap) return;
+    wrap.classList.add('has-value');
+    sel.addEventListener('change', () => wrap.classList.add('has-value'));
+  });
+
+  /* ── Now-playing mini-bar ── */
+  const np = document.getElementById('nowPlaying'); if (!np) return;
+  const npTitle  = document.getElementById('npTitle');
+  const npArtist = document.getElementById('npArtist');
+  const npPlay   = document.getElementById('npPlayBtn');
+  const npClose  = document.getElementById('npClose');
+  const npInfo   = document.getElementById('npInfo');
+  const audioSection = document.getElementById('audio');
+
+  const npPlayIcon  = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+  const npPauseIcon = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+
+  let audioInView = true;
+  if (audioSection && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      audioInView = entries[0].isIntersecting;
+      render();
+    }, { threshold: 0, rootMargin: '-80px 0px -10% 0px' });
+    io.observe(audioSection);
+  }
+
+  function getActive() {
+    /* activeCF / activeAV are in the same script scope, accessed via direct ref */
+    if (typeof activeCF !== 'undefined' && activeCF) {
+      const row = document.getElementById('cfrow-' + activeCF.id);
+      const t   = row && row.querySelector('.track-title')  ? row.querySelector('.track-title').textContent  : '';
+      const a   = row && row.querySelector('.track-artist') ? row.querySelector('.track-artist').textContent : '';
+      return { type:'cf', id:activeCF.id, paused:!!activeCF.paused, title:t||'—', artist:a||'—' };
+    }
+    if (typeof activeAV !== 'undefined' && activeAV) {
+      const btn = document.querySelector('.play-btn[data-simple="' + activeAV.id + '"]');
+      const row = btn ? btn.closest('.audio-track') : null;
+      const t   = row && row.querySelector('.track-title')  ? row.querySelector('.track-title').textContent  : '';
+      const a   = row && row.querySelector('.track-artist') ? row.querySelector('.track-artist').textContent : '';
+      return { type:'av', id:activeAV.id, paused:!!activeAV.paused, title:t||'—', artist:a||'—' };
+    }
+    return null;
+  }
+
+  function render() {
+    const a = getActive();
+    if (a && !audioInView) {
+      np.classList.add('visible');
+      np.setAttribute('aria-hidden', 'false');
+      if (npTitle.textContent  !== a.title)  npTitle.textContent  = a.title;
+      if (npArtist.textContent !== a.artist) npArtist.textContent = a.artist;
+      npPlay.innerHTML = a.paused ? npPlayIcon : npPauseIcon;
+    } else {
+      np.classList.remove('visible');
+      np.setAttribute('aria-hidden', 'true');
+    }
+  }
+  setInterval(render, 300);
+
+  npPlay.addEventListener('click', () => {
+    const a = getActive(); if (!a) return;
+    const sel = a.type === 'cf'
+      ? '.play-btn[data-cf="'     + a.id + '"]'
+      : '.play-btn[data-simple="' + a.id + '"]';
+    const realBtn = document.querySelector(sel);
+    if (realBtn) realBtn.click();
+  });
+  npClose.addEventListener('click', () => {
+    const a = getActive();
+    if (a) {
+      if (a.type === 'cf' && typeof stopAllCF === 'function') stopAllCF();
+      if (a.type === 'av' && typeof stopAV    === 'function') stopAV();
+    }
+    np.classList.remove('visible');
+  });
+  npInfo.addEventListener('click', () => {
+    const el = document.getElementById('audio'); if (!el) return;
+    window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+  });
+
+})();
 </script>
 
 </body>
