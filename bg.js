@@ -84,13 +84,13 @@
     const docH = Math.max(1, (document.documentElement.scrollHeight || 1) - window.innerHeight);
     const progress = Math.min(1, Math.max(0, currentY / docH));
 
-    /* PHOTO — breathing zoom (only when idle 20s) + vertical parallax + horizontal pan */
+    /* PHOTO — vertical parallax + horizontal pan. Scale is static unless breathing. */
     const breathT      = tt * (2 * Math.PI / 8);
     const breath       = Math.sin(breathT);
     const breathScale  = breathingActive ? (0.030 * breath) : 0;
     const breathDriftY = breathingActive ? (4 * Math.sin(breathT)) : 0;
     const photoTY      = -currentY * 0.18 + breathDriftY;
-    const photoScale   = 1.18 + progress * 0.05 + breathScale;
+    const photoScale   = 1.18 + breathScale;          /* no scroll-based zoom */
     const photoX       = 70 - progress * 40;
 
     /* Only write to DOM when value has actually changed — avoids redundant repaints */
@@ -116,9 +116,10 @@
       spot.style.opacity = (0.85 + breath * 0.10).toFixed(3);
     }
 
-    /* NEON ghost — composited transform */
-    if (neon) {
-      const jitter = Math.min(Math.abs(velocitySmooth) * 0.3, 6);
+    /* NEON ghost — composited transform, only relevant near hero */
+    if (neon && currentY < window.innerHeight * 1.8) {
+      const v2 = currentY - lastY;
+      const jitter = Math.min(Math.abs(v2) * 2, 6);
       const ny = -currentY * 0.55;
       neon.style.transform =
         `translate3d(${(Math.sin(tt * 9) * jitter).toFixed(2)}px, ${ny.toFixed(2)}px, 0) rotate(-1deg)`;
