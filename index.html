@@ -829,11 +829,7 @@
         <div class="hero-stat-num">
           <div class="hero-stat-infinity" aria-label="Infinite">
             <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
-              <!-- Outer portal ring — spins clockwise, dashed arc -->
-              <circle class="inf-portal"   cx="50" cy="20" r="22"/>
-              <!-- Inner portal ring — spins counter-clockwise, tighter -->
-              <circle class="inf-portal-2" cx="50" cy="20" r="14"/>
-              <!-- Path starts as a circle, morphs to infinity as portal rings fade -->
+              <!-- One path: circle → wobble → infinity. Canvas sparks provide the orbital circle phase. -->
               <path class="inf-path" d="M 72,20 C 72,32 62,42 50,42 C 38,42 28,32 28,20 C 28,8 38,-2 50,-2 C 62,-2 72,8 72,20 Z"/>
             </svg>
           </div>
