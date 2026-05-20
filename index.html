@@ -242,6 +242,13 @@
 
 
 
+    /* Mini player — icon toggle via class, no innerHTML reconstruction */
+    .np-icon-pause { display: none; }
+    .np-btn.is-playing .np-icon-play  { display: none; }
+    .np-btn.is-playing .np-icon-pause { display: block; }
+    /* Section wave currents (traveling sparks) — removed */
+    .wc { display: none !important; }
+
     .nav-logo-img { mix-blend-mode: screen; }
 
     /* NAV */
@@ -754,7 +761,8 @@
     <div class="np-artist" id="npArtist">—</div>
   </div>
   <button class="np-btn" id="npPlayBtn" aria-label="Play/Pause">
-    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+    <svg class="np-icon-play"  viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    <svg class="np-icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
   </button>
   <button class="np-close" id="npClose" aria-label="Stop playback">×</button>
 </div>
@@ -2149,7 +2157,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       np.setAttribute('aria-hidden', 'false');
       if (npTitle.textContent  !== a.title)  npTitle.textContent  = a.title;
       if (npArtist.textContent !== a.artist) npArtist.textContent = a.artist;
-      npPlay.innerHTML = a.paused ? npPlayIcon : npPauseIcon;
+      npPlay.classList.toggle('is-playing', !a.paused);
     } else {
       np.classList.remove('visible');
       np.setAttribute('aria-hidden', 'true');
@@ -2157,7 +2165,8 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
   }
   setInterval(render, 80);
 
-  npPlay.addEventListener('click', () => {
+  npPlay.addEventListener('click', (e) => {
+    e.stopPropagation();
     const a = getActive(); if (!a) return;
     const sel = a.type === 'cf'
       ? '.play-btn[data-cf="'     + a.id + '"]'
