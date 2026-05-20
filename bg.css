@@ -25,8 +25,8 @@ html { background:#0a0908; }
     }
     .studio-bg__photo.is-loaded {
       filter: blur(6px) saturate(1.1) brightness(0.5) contrast(1.1);
-      /* Slow opacity + filter breath (8s) — paired with JS scale breath below */
       animation: photoBreathe 8s ease-in-out infinite alternate;
+      animation-play-state: paused; /* JS sets to running after 20s inactivity */
     }
     @keyframes photoBreathe {
       0%   { opacity: 0.72; }
