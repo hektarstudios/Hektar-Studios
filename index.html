@@ -1723,6 +1723,7 @@ document.querySelectorAll('.play-btn[data-cf]').forEach(btn => {
       }
       return;
     }
+    stopAV();       /* stop simple/VO player if one is running */
     stopAllCF();
     rawA.volume = 1; proA.volume = 0;
     rawA.currentTime = 0; proA.currentTime = 0;
@@ -1884,6 +1885,7 @@ document.querySelectorAll('.play-btn[data-simple]').forEach(btn => {
       }
       return;
     }
+    stopAllCF();    /* stop crossfade player if one is running */
     stopAV();
     audio.currentTime = 0;
     audio.play().catch(() => {});
