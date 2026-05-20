@@ -51,7 +51,7 @@
 
     /* ── 3. Hero stat: ∞ portal opening + slot-machine counter ── */
 
-    /* ── INFINITY wrapper + SVG ── */
+    /* ── INFINITY — container + SVG ── */
     .hero-stat-infinity {
       display: inline-block;
       width: clamp(78px, 9vw, 132px);
@@ -60,99 +60,49 @@
     }
     .hero-stat-infinity svg { width: 100%; height: 100%; overflow: visible; }
 
-    /* ── Outer portal ring — clockwise arc ── */
-    .hero-stat-infinity .inf-portal {
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-dasharray: 72 66;   /* ~52% arc visible */
-      stroke-linecap: round;
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      filter: drop-shadow(0 0 6px rgba(232,245,66,1));
-    }
-
-    /* ── Inner portal ring — counter-clockwise, tighter ── */
-    .hero-stat-infinity .inf-portal-2 {
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 1.2;
-      stroke-dasharray: 30 58;   /* shorter arc, sparser */
-      stroke-linecap: round;
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      filter: drop-shadow(0 0 5px rgba(232,245,66,0.85));
-    }
-
-    /* ── Infinity path — starts as circle, morphs to infinity ── */
+    /* ── Single path: starts as circle, morphs to infinity ── */
     .hero-stat-infinity .inf-path {
       fill: none;
       stroke: currentColor;
-      stroke-width: 2;        /* starts thin (matches ring), grows to full width */
+      stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
       opacity: 0;
       filter: drop-shadow(0 0 7px rgba(232,245,66,0.5));
     }
 
-    /* ── All triggered when .visible is added ── */
-    .hero-stat-infinity.visible .inf-portal {
-      animation: infPortalOuter 2.6s cubic-bezier(0.2, 1, 0.4, 1) forwards;
-    }
-    .hero-stat-infinity.visible .inf-portal-2 {
-      animation: infPortalInner 2.2s cubic-bezier(0.2, 1, 0.4, 1) 0.12s forwards;
-    }
-    /* Path starts after portal rings peak, morphs through circle → wobble → infinity */
+    /* Triggered when .visible is added.
+       Delay matches canvas spark orbit phase (sparks appear at ~620ms,
+       path fades in at 800ms — they briefly coexist so sparks look like
+       they orbit the solid circle before it morphs). */
     .hero-stat-infinity.visible .inf-path {
-      animation: infMorph 3.2s cubic-bezier(0.22, 0.9, 0.36, 1) 1.4s forwards;
-    }
-
-    /* ── Keyframes ── */
-    @keyframes infPortalOuter {
-      0%   { opacity:0; stroke-dashoffset:0;   transform:rotate(-200deg) scale(0.12); stroke-width:1;   }
-      8%   { opacity:1;                          transform:rotate(-80deg)  scale(0.55); stroke-width:1.8; }
-      28%  { opacity:1; stroke-dashoffset:72;  transform:rotate(20deg)   scale(1);    }
-      52%  { opacity:1; stroke-dashoffset:144; transform:rotate(160deg)  scale(1.03); stroke-width:2.2; }
-      68%  { opacity:0.85; stroke-dashoffset:200; transform:rotate(280deg) scale(1.06); }
-      82%  { opacity:0.3;  transform:rotate(370deg) scale(1.12); }
-      100% { opacity:0;    transform:rotate(480deg) scale(1.22); stroke-width:0.8; }
-    }
-    @keyframes infPortalInner {
-      0%   { opacity:0; stroke-dashoffset:0;  transform:rotate(160deg)  scale(0.1); }
-      10%  { opacity:0.85; transform:rotate(60deg) scale(0.6); }
-      35%  { opacity:0.9;  stroke-dashoffset:50; transform:rotate(-80deg) scale(1); stroke-width:1.6; }
-      58%  { opacity:0.8;  stroke-dashoffset:88; transform:rotate(-230deg) scale(1.04); }
-      75%  { opacity:0.25; transform:rotate(-320deg) scale(1.1); }
-      100% { opacity:0;    transform:rotate(-450deg) scale(1.18); }
+      animation: infMorph 3.5s cubic-bezier(0.22, 0.9, 0.36, 1) 0.8s forwards;
     }
 
     /* Circle → wobbly squish → figure-8 → infinity
-       Paths share structure (M + 4C + Z) so CSS interpolates each control point.
-       stroke-width also grows from ring-thin (2) to full infinity weight (7). */
+       One path, one animation, no overlapping elements. */
     @keyframes infMorph {
       0% {
         d: path('M 72,20 C 72,32 62,42 50,42 C 38,42 28,32 28,20 C 28,8 38,-2 50,-2 C 62,-2 72,8 72,20 Z');
         opacity: 0; stroke-width: 2;
       }
-      10% { opacity: 1; }
-      /* Circle begins to pinch at centre — wobbly, slightly resisting */
+      8%  { opacity: 1; }
+      /* Circle begins to pinch — resists, slightly wobbly */
       30% {
         d: path('M 72,20 C 72,25 61,32 50,35 C 39,39 28,32 28,20 C 28,8 39,1 50,5 C 61,8 72,15 72,20 Z');
         stroke-width: 3.5;
       }
-      /* Figure-8 clearly forming — two lobes visible */
+      /* Figure-8 clearly forming */
       58% {
         d: path('M 72,20 C 72,18 60,22 50,29 C 40,36 28,32 28,20 C 28,8 40,4 50,11 C 60,18 72,22 72,20 Z');
         stroke-width: 5.5;
       }
-      /* Near-final — slightly overshoot so loops feel snappy */
-      85% {
+      /* Slight overshoot — loops snap wider before settling */
+      84% {
         d: path('M 72,20 C 72,7 58,7 50,20 C 42,33 28,33 28,20 C 28,7 42,7 50,20 C 58,33 72,33 72,20 Z');
         stroke-width: 7.5;
       }
-      /* Settle to final infinity */
+      /* Final infinity */
       100% {
         d: path('M 72,20 C 72,8 58,8 50,20 C 42,32 28,32 28,20 C 28,8 42,8 50,20 C 58,32 72,32 72,20 Z');
         opacity: 1; stroke-width: 7;
