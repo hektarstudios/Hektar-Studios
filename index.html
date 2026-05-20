@@ -262,7 +262,7 @@
     /* Section wave currents (traveling sparks) — removed */
     .wc { display: none !important; }
 
-    .nav-logo-img { mix-blend-mode: screen; }
+    /* logo black bg removed via canvas — see removeLogoBg() below */
 
     /* NAV */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 48px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s,padding 0.4s;}
@@ -1452,7 +1452,7 @@
 <footer>
   <div class="footer-inner">
     <div style="display:flex;flex-direction:column;align-items:center;width:fit-content;">
-      <img src="logo-cropped.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;mix-blend-mode:screen;"/>
+      <img src="logo-cropped.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;"/>
       <div class="footer-tagline">Crafting Sound. Creating Soul.</div>
     </div>
     <div class="footer-hero-text">Artist First.<br>Always.</div>
@@ -2200,6 +2200,65 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
   });
 
+})();
+</script>
+
+<!-- Logo black-background remover — canvas pixel approach, works in all stacking contexts -->
+<script>
+(function () {
+  /* Threshold: pixels where R, G, and B are ALL below this value become transparent.
+     40 catches pure black + slight JPEG artifacts. Yellow/pink logo content is safe
+     (yellow: R≈230, G≈245, B≈66 — all channels well above 40). */
+  var THRESHOLD = 40;
+
+  function removeBg(img) {
+    function process() {
+      var w = img.naturalWidth  || img.width;
+      var h = img.naturalHeight || img.height;
+      if (!w || !h) return;
+
+      var canvas = document.createElement('canvas');
+      canvas.width  = w;
+      canvas.height = h;
+      var ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+      try {
+        ctx.drawImage(img, 0, 0);
+        var id = ctx.getImageData(0, 0, w, h);
+        var px = id.data;
+        for (var i = 0; i < px.length; i += 4) {
+          if (px[i] < THRESHOLD && px[i+1] < THRESHOLD && px[i+2] < THRESHOLD) {
+            px[i+3] = 0; /* alpha → transparent */
+          }
+        }
+        ctx.putImageData(id, 0, 0);
+        /* Replace src with processed transparent PNG — runs synchronously,
+           so the browser swaps in the new version before the next paint */
+        img.src = canvas.toDataURL('image/png');
+      } catch (e) {
+        /* Cross-origin taint guard — silently skip if it fails */
+      }
+    }
+
+    if (img.complete && img.naturalWidth > 0) {
+      process();
+    } else {
+      img.addEventListener('load', process, { once: true });
+    }
+  }
+
+  /* Run on DOMContentLoaded so both nav + footer logos are in the DOM */
+  function init() {
+    document.querySelectorAll('img[src="logo-cropped.png"]').forEach(function(img) {
+      removeBg(img);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 
