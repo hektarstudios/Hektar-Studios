@@ -40,8 +40,8 @@
   let rafPaused = false;
   document.addEventListener('visibilitychange', () => { rafPaused = document.hidden; });
 
-  /* Skip DOM writes when value hasn't meaningfully changed */
-  let lastPhotoX = -999, lastPhotoTY = -999, lastPhotoScale = -999;
+  /* Skip DOM writes when value hasn't changed — avoids redundant repaints */
+  let lastPhotoX = -999, lastPhotoTY = -999, lastPhotoScale = -999, lastFlowY = -999;
   let frameCount = 0;
   let t0 = 0;
 
@@ -53,8 +53,8 @@
     const tt = t - t0;
     frameCount++;
 
-    /* Smooth scroll position */
-    currentY += (targetY - currentY) * 0.12;
+    /* Smooth scroll — 0.07 gives gentle easing without overshoot */
+    currentY += (targetY - currentY) * 0.07;
     const v = currentY - lastY;
     velocitySmooth += (v - velocitySmooth) * 0.16;
     lastY = currentY;
@@ -76,10 +76,12 @@
     if (Math.abs(photoScale - lastPhotoScale) > 0.0002) { photo.style.setProperty('--photoScale', photoScale.toFixed(4));       lastPhotoScale = photoScale; }
     if (Math.abs(photoX     - lastPhotoX)     > 0.05)   { photo.style.setProperty('--photoX',     photoX.toFixed(2) + '%');    lastPhotoX     = photoX; }
 
-    /* BLOB FLOW — composited transform, safe to run every frame */
-    flow.style.setProperty('--flowY', (-currentY * 0.82).toFixed(2) + 'px');
-
-    /* SPOTLIGHT — throttled to ~20fps; slow drift is imperceptible at lower rate */
+    /* BLOB FLOW + WAVES — only write when scroll has actually moved */
+    if (Math.abs(currentY - lastFlowY) > 0.15) {
+      flow.style.setProperty('--flowY', (-currentY * 0.82).toFixed(1) + 'px');
+      if (waves) waves.style.setProperty('--wavesY', (-currentY * 0.45).toFixed(1) + 'px');
+      lastFlowY = currentY;
+    }
     if (frameCount % 3 === 0) {
       const sX  = 50 + Math.sin(tt * 0.30) * 25;
       const sY  = 30 + Math.sin(tt * 0.45) * 18 + Math.sin(tt * 0.18) * 8;
@@ -91,9 +93,6 @@
       spot.style.setProperty('--spotY2', sY2.toFixed(1) + '%');
       spot.style.opacity = (0.85 + breath * 0.10).toFixed(3);
     }
-
-    /* WAVES — composited transform */
-    if (waves) waves.style.setProperty('--wavesY', (-currentY * 0.45).toFixed(2) + 'px');
 
     /* NEON ghost — composited transform */
     if (neon) {
