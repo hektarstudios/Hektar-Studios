@@ -49,7 +49,9 @@
     }
     .play-btn.playing::after { opacity: 1; }
 
-    /* ── 3. Hero stat reveals — ∞ morph-draw + slot-machine counter ── */
+    /* ── 3. Hero stat: ∞ portal opening + slot-machine counter ── */
+
+    /* ── INFINITY — container + SVG ── */
     .hero-stat-infinity {
       display: inline-block;
       width: clamp(78px, 9vw, 132px);
@@ -57,42 +59,102 @@
       color: var(--yellow);
     }
     .hero-stat-infinity svg { width: 100%; height: 100%; overflow: visible; }
-    .hero-stat-infinity path {
+
+    /* ── Portal ring ── */
+    .hero-stat-infinity .inf-portal {
       fill: none;
       stroke: currentColor;
-      stroke-width: 8;
+      stroke-width: 1.6;
+      stroke-dasharray: 7 4;
+      stroke-linecap: round;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      filter: drop-shadow(0 0 5px rgba(232,245,66,0.95));
+    }
+
+    /* ── Sparks ── */
+    .hero-stat-infinity .inf-sp {
+      fill: currentColor;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      filter: drop-shadow(0 0 4px rgba(232,245,66,1));
+    }
+
+    /* ── Infinity path ── */
+    .hero-stat-infinity .inf-path {
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 7;
       stroke-linecap: round;
       stroke-linejoin: round;
       stroke-dasharray: 180;
       stroke-dashoffset: 180;
-      filter: drop-shadow(0 0 6px rgba(232,245,66,0.4));
       opacity: 0;
-      transition:
-        stroke-dashoffset 1.6s cubic-bezier(0.23, 1, 0.32, 1) 0.1s,
-        opacity 0.5s ease 0.05s;
+      filter: drop-shadow(0 0 6px rgba(232,245,66,0.45));
     }
-    .hero-stat .reveal.visible .hero-stat-infinity path,
-    .hero-stat.visible .hero-stat-infinity path,
-    .hero-stat-infinity.visible path {
-      stroke-dashoffset: 0;
-      opacity: 1;
+
+    /* ── All three triggered when .visible is added ── */
+    .hero-stat-infinity.visible .inf-portal {
+      animation: infPortal 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
     }
-    /* Slot-machine counter wrapper */
+    .hero-stat-infinity.visible .inf-path {
+      animation: infDraw 3.0s cubic-bezier(0.23, 1, 0.32, 1) 0.65s forwards;
+    }
+
+    /* Sparks — each fires at slightly different delays for organic burst */
+    .hero-stat-infinity.visible .sp1 { animation: sp1Out 0.9s ease-out 0.28s forwards; }
+    .hero-stat-infinity.visible .sp2 { animation: sp2Out 0.8s ease-out 0.38s forwards; }
+    .hero-stat-infinity.visible .sp3 { animation: sp3Out 0.9s ease-out 0.31s forwards; }
+    .hero-stat-infinity.visible .sp4 { animation: sp4Out 0.8s ease-out 0.42s forwards; }
+    .hero-stat-infinity.visible .sp5 { animation: sp5Out 0.9s ease-out 0.26s forwards; }
+    .hero-stat-infinity.visible .sp6 { animation: sp6Out 0.8s ease-out 0.36s forwards; }
+    .hero-stat-infinity.visible .sp7 { animation: sp7Out 0.9s ease-out 0.33s forwards; }
+    .hero-stat-infinity.visible .sp8 { animation: sp8Out 0.8s ease-out 0.44s forwards; }
+
+    /* ── Keyframes ── */
+
+    /* Portal ring: spins in, completes the circle, then fades as path takes over */
+    @keyframes infPortal {
+      0%   { opacity: 0; stroke-dashoffset: 138; transform: rotate(-200deg) scale(0.25); }
+      18%  { opacity: 1; }
+      55%  { opacity: 0.95; stroke-dashoffset: 0; transform: rotate(90deg) scale(1); }
+      75%  { opacity: 0.4;  transform: rotate(190deg) scale(1.1); }
+      100% { opacity: 0;    transform: rotate(320deg) scale(1.2); }
+    }
+
+    /* Infinity path: draws itself stroke by stroke */
+    @keyframes infDraw {
+      0%   { stroke-dashoffset: 180; opacity: 0; }
+      12%  { opacity: 1; }
+      100% { stroke-dashoffset: 0;   opacity: 1; }
+    }
+
+    /* 8 sparks: each flies radially outward from the ring, fades out */
+    /* Direction vectors scaled to 14 SVG units of travel */
+    @keyframes sp1Out { 0%{opacity:0}  8%{opacity:0.95} 100%{opacity:0; transform:translate(14px,0);   } }
+    @keyframes sp2Out { 0%{opacity:0}  8%{opacity:0.9}  100%{opacity:0; transform:translate(10px,10px); } }
+    @keyframes sp3Out { 0%{opacity:0}  8%{opacity:0.95} 100%{opacity:0; transform:translate(0,14px);   } }
+    @keyframes sp4Out { 0%{opacity:0}  8%{opacity:0.9}  100%{opacity:0; transform:translate(-10px,10px);} }
+    @keyframes sp5Out { 0%{opacity:0}  8%{opacity:0.95} 100%{opacity:0; transform:translate(-14px,0);  } }
+    @keyframes sp6Out { 0%{opacity:0}  8%{opacity:0.9}  100%{opacity:0; transform:translate(-10px,-10px);} }
+    @keyframes sp7Out { 0%{opacity:0}  8%{opacity:0.95} 100%{opacity:0; transform:translate(0,-14px);  } }
+    @keyframes sp8Out { 0%{opacity:0}  8%{opacity:0.9}  100%{opacity:0; transform:translate(10px,-10px);} }
+
+    /* ── SLOT-MACHINE COUNTER ── */
     .counter {
       display: inline-block;
-      min-width: 0.6em;
       text-align: center;
-      will-change: transform, filter;
-    }
-    .counter.spinning {
-      filter: blur(0.5px);
+      /* overflow + height set by JS at animation time */
     }
     .counter.landed {
-      animation: counterLand 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: counterLand 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     @keyframes counterLand {
-      0%   { transform: translateY(-8px) scale(1.12); filter: drop-shadow(0 0 10px rgba(232,245,66,0.65)); }
-      100% { transform: none;                          filter: drop-shadow(0 0 0   rgba(232,245,66,0));    }
+      0%   { transform: translateY(-6px); filter: drop-shadow(0 0 14px rgba(232,245,66,0.75)); }
+      60%  { transform: translateY(2px); }
+      100% { transform: none; filter: none; }
     }
 
     /* ── 8. Floating-label form ── */
