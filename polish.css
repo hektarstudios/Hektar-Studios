@@ -60,7 +60,7 @@
     }
     .hero-stat-infinity svg { width: 100%; height: 100%; overflow: visible; }
 
-    /* ── Single path: starts as circle, morphs to infinity ── */
+    /* Styling only — all animation driven by JS animateInfinity() */
     .hero-stat-infinity .inf-path {
       fill: none;
       stroke: currentColor;
@@ -68,45 +68,7 @@
       stroke-linecap: round;
       stroke-linejoin: round;
       opacity: 0;
-      filter: drop-shadow(0 0 7px rgba(232,245,66,0.5));
-    }
-
-    /* Triggered when .visible is added.
-       Delay matches canvas spark orbit phase (sparks appear at ~620ms,
-       path fades in at 800ms — they briefly coexist so sparks look like
-       they orbit the solid circle before it morphs). */
-    .hero-stat-infinity.visible .inf-path {
-      animation: infMorph 3.5s cubic-bezier(0.22, 0.9, 0.36, 1) 0.8s forwards;
-    }
-
-    /* Circle → wobbly squish → figure-8 → infinity
-       One path, one animation, no overlapping elements. */
-    @keyframes infMorph {
-      0% {
-        d: path('M 72,20 C 72,32 62,42 50,42 C 38,42 28,32 28,20 C 28,8 38,-2 50,-2 C 62,-2 72,8 72,20 Z');
-        opacity: 0; stroke-width: 2;
-      }
-      8%  { opacity: 1; }
-      /* Circle begins to pinch — resists, slightly wobbly */
-      30% {
-        d: path('M 72,20 C 72,25 61,32 50,35 C 39,39 28,32 28,20 C 28,8 39,1 50,5 C 61,8 72,15 72,20 Z');
-        stroke-width: 3.5;
-      }
-      /* Figure-8 clearly forming */
-      58% {
-        d: path('M 72,20 C 72,18 60,22 50,29 C 40,36 28,32 28,20 C 28,8 40,4 50,11 C 60,18 72,22 72,20 Z');
-        stroke-width: 5.5;
-      }
-      /* Slight overshoot — loops snap wider before settling */
-      84% {
-        d: path('M 72,20 C 72,7 58,7 50,20 C 42,33 28,33 28,20 C 28,7 42,7 50,20 C 58,33 72,33 72,20 Z');
-        stroke-width: 7.5;
-      }
-      /* Final infinity */
-      100% {
-        d: path('M 72,20 C 72,8 58,8 50,20 C 42,32 28,32 28,20 C 28,8 42,8 50,20 C 58,32 72,32 72,20 Z');
-        opacity: 1; stroke-width: 7;
-      }
+      filter: drop-shadow(0 0 6px rgba(232,245,66,0.7));
     }
 
     /* ── SLOT-MACHINE COUNTER ── */
