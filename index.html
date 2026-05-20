@@ -840,10 +840,6 @@
         <div class="hero-stat-num"><span class="counter" data-target="4">0</span></div>
         <div class="hero-stat-label">Services</div>
       </div>
-      <div class="hero-scroll reveal reveal-delay-3">
-        <div class="scroll-line"></div>
-        <span>Scroll</span>
-      </div>
     </div>
   </div>
 </section>
@@ -2104,8 +2100,8 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     /* Ease-out: fast start, smooth landing */
     function easeOut(t) { return 1 - Math.pow(1 - t, 2.6); }
 
-    var ROTATE_DUR = 1300; /* ms — rotating dashed circle */
-    var MORPH_DUR  = 3600; /* ms — morph to infinity      */
+    var ROTATE_DUR = 1800; /* ms — rotating dashed circle */
+    var MORPH_DUR  = 5200; /* ms — morph to infinity      */
     var TOTAL      = ROTATE_DUR + MORPH_DUR;
     var circleD    = toD(KF[0].c);
     var rafPaused  = false;
@@ -2184,14 +2180,14 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     /* Two rAFs so DOM paints the initial position before the transition fires */
     requestAnimationFrame(() => requestAnimationFrame(() => {
       /* cubic-bezier: fast start (slot spin) → smooth deceleration (landing) */
-      reel.style.transition = `transform 3.6s cubic-bezier(0.05, 0.85, 0.18, 1)`;
+      reel.style.transition = `transform 5.6s cubic-bezier(0.05, 0.85, 0.18, 1)`;
       reel.style.transform  = `translateY(${finalY}px)`;
 
       /* Landing sparkle when reel settles */
       setTimeout(() => {
         el.classList.add('landed');
         setTimeout(() => el.classList.remove('landed'), 550);
-      }, 3600);
+      }, 5600);
     }));
   }
   const heroIO = new IntersectionObserver(entries => {
