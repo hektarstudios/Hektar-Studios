@@ -2056,112 +2056,94 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
   updateNavSpy();
 
   /* ══════════════════════════════════════════════════════════════════
-     PORTAL SPARKS — canvas particle system, fires once, self-cleans
-     Uses destination-out trail fade so background stays transparent
+     INFINITY ANIMATION — single JS-driven sequence on one SVG path
+     Phase 1: dashed circle rotates (simulates orbiting sparks)
+     Phase 2: morphs circle → squish → figure-8 → infinity
+     Pure JS so it works on all browsers including iOS Safari
      ══════════════════════════════════════════════════════════════════ */
-  function portalSparks(wrapper) {
-    if (wrapper.dataset.portalFired) return;
-    wrapper.dataset.portalFired = '1';
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  function animateInfinity(pathEl) {
+    if (pathEl.dataset.animFired) return;
+    pathEl.dataset.animFired = '1';
 
-    /* Wait for the reveal transition to settle before capturing position */
-    setTimeout(function() {
-      var rect = wrapper.getBoundingClientRect();
-      var pad  = 55;
-      var W    = rect.width  + pad * 2;
-      var H    = rect.height + pad * 2;
-      var dpr  = Math.min(window.devicePixelRatio || 1, 2);
+    /* Reduced motion: jump straight to final shape */
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      pathEl.setAttribute('d', 'M 72,20 C 72,8 58,8 50,20 C 42,32 28,32 28,20 C 28,8 42,8 50,20 C 58,32 72,32 72,20 Z');
+      pathEl.setAttribute('stroke-width', '7');
+      pathEl.style.opacity = '1';
+      return;
+    }
 
-      var canvas = document.createElement('canvas');
-      canvas.width  = Math.round(W * dpr);
-      canvas.height = Math.round(H * dpr);
-      /* Set CSS size explicitly so retina canvas displays at correct visual size */
-      canvas.style.position      = 'fixed';
-      canvas.style.left          = (rect.left - pad) + 'px';
-      canvas.style.top           = (rect.top  - pad) + 'px';
-      canvas.style.width         = W + 'px';
-      canvas.style.height        = H + 'px';
-      canvas.style.pointerEvents = 'none';
-      canvas.style.zIndex        = '9997';
-      document.body.appendChild(canvas);
+    /* ── Keyframes: M(x,y) + 4×C(cp1x,cp1y cp2x,cp2y x,y) = 26 coords ── */
+    var KF = [
+      {t:0.00, c:[72,20, 72,32,62,42,50,42, 38,42,28,32,28,20, 28,8,38,-2,50,-2, 62,-2,72,8,72,20], sw:2  },
+      {t:0.28, c:[72,20, 72,25,61,32,50,35, 39,39,28,32,28,20, 28,8,39,1,50,5,   61,8,72,15,72,20], sw:3.5},
+      {t:0.56, c:[72,20, 72,18,60,22,50,29, 40,36,28,32,28,20, 28,8,40,4,50,11,  60,18,72,22,72,20],sw:5.5},
+      {t:0.82, c:[72,20, 72,7,58,7,50,20,   42,33,28,33,28,20, 28,7,42,7,50,20,  58,33,72,33,72,20],sw:7.5},
+      {t:1.00, c:[72,20, 72,8,58,8,50,20,   42,32,28,32,28,20, 28,8,42,8,50,20,  58,32,72,32,72,20],sw:7  }
+    ];
 
-      var ctx = canvas.getContext('2d');
-      ctx.scale(dpr, dpr);
+    function lerp(a, b, t) { return a + (b - a) * t; }
 
-      var cx = W / 2;
-      var cy = H / 2;
-      var px = rect.width / 100;   /* 1 SVG unit in CSS pixels */
-      var R  = 22 * px;            /* outer ring radius */
-
-      /* 20 sparks distributed evenly around the ring */
-      var N = 20;
-      var sparks = [];
-      for (var i = 0; i < N; i++) {
-        var baseAngle = (i / N) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
-        sparks.push({
-          angle : baseAngle,
-          speed : 0.022 + Math.random() * 0.022,   /* orbital speed, rad/frame */
-          size  : (0.7 + Math.random() * 1.1) * px,
-          hue   : 44 + Math.random() * 22,
-        });
+    function getFrame(p) {
+      var k0 = KF[0], k1 = KF[KF.length-1];
+      for (var i = 0; i < KF.length-1; i++) {
+        if (p >= KF[i].t && p <= KF[i+1].t) { k0 = KF[i]; k1 = KF[i+1]; break; }
       }
+      var t = k1.t === k0.t ? 1 : (p - k0.t) / (k1.t - k0.t);
+      return { c: k0.c.map(function(v,i){ return lerp(v, k1.c[i], t); }), sw: lerp(k0.sw, k1.sw, t) };
+    }
 
-      var FADE_START = 1300;  /* ms before sparks start fading */
-      var TOTAL      = 3000;  /* ms total canvas life           */
-      var t0 = performance.now();
-      var rafPaused = false;
-      function onVis() { rafPaused = document.hidden; }
-      document.addEventListener('visibilitychange', onVis);
+    function toD(c) {
+      return 'M '+c[0]+','+c[1]+
+             ' C '+c[2]+','+c[3]+' '+c[4]+','+c[5]+' '+c[6]+','+c[7]+
+             ' C '+c[8]+','+c[9]+' '+c[10]+','+c[11]+' '+c[12]+','+c[13]+
+             ' C '+c[14]+','+c[15]+' '+c[16]+','+c[17]+' '+c[18]+','+c[19]+
+             ' C '+c[20]+','+c[21]+' '+c[22]+','+c[23]+' '+c[24]+','+c[25]+' Z';
+    }
 
-      function frame(now) {
-        var elapsed = now - t0;
-        if (elapsed >= TOTAL) {
-          canvas.remove();
-          document.removeEventListener('visibilitychange', onVis);
-          return;
-        }
-        requestAnimationFrame(frame);
-        if (rafPaused) return;
+    /* Ease-out: fast start, smooth landing */
+    function easeOut(t) { return 1 - Math.pow(1 - t, 2.6); }
 
-        /* ── Fade trails while keeping canvas background TRANSPARENT ──
-           destination-out reduces alpha of existing pixels toward 0
-           (unlike black fill which accumulates to opaque black)        */
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.fillStyle = 'rgba(0,0,0,0.18)';
-        ctx.fillRect(0, 0, W, H);
-        ctx.globalCompositeOperation = 'source-over';
+    var ROTATE_DUR = 1300; /* ms — rotating dashed circle */
+    var MORPH_DUR  = 3600; /* ms — morph to infinity      */
+    var TOTAL      = ROTATE_DUR + MORPH_DUR;
+    var circleD    = toD(KF[0].c);
+    var rafPaused  = false;
 
-        /* Global fade-out starts at FADE_START */
-        var globalLife = elapsed < FADE_START
-          ? 1
-          : Math.max(0, 1 - (elapsed - FADE_START) / (TOTAL - FADE_START));
+    function onVis() { rafPaused = document.hidden; }
+    document.addEventListener('visibilitychange', onVis);
 
-        if (globalLife <= 0.01) return;
+    var t0 = performance.now();
 
-        sparks.forEach(function(sp) {
-          sp.angle += sp.speed;
-          var x = cx + Math.cos(sp.angle) * R;
-          var y = cy + Math.sin(sp.angle) * R;
-
-          /* Slight per-spark twinkle */
-          var alpha = globalLife * (0.65 + 0.35 * Math.random());
-          if (alpha < 0.02) return;
-
-          ctx.globalAlpha = alpha;
-          ctx.shadowColor = 'hsla(' + sp.hue + ',100%,72%,0.95)';
-          ctx.shadowBlur  = sp.size * 5;
-          ctx.fillStyle   = 'hsl(' + sp.hue + ',100%,75%)';
-          ctx.beginPath();
-          ctx.arc(x, y, sp.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur  = 0;
-      }
-
+    function frame(now) {
+      if (rafPaused) { requestAnimationFrame(frame); return; }
+      var elapsed = now - t0;
+      if (elapsed > TOTAL + 200) { document.removeEventListener('visibilitychange', onVis); return; }
       requestAnimationFrame(frame);
-    }, 620);
+
+      if (elapsed <= ROTATE_DUR) {
+        /* Phase 1 — dashed circle spins one full rotation */
+        var p1 = elapsed / ROTATE_DUR;
+        pathEl.style.opacity = String(Math.min(1, p1 * 3.5).toFixed(2));
+        pathEl.setAttribute('d', circleD);
+        pathEl.setAttribute('stroke-width', lerp(1.8, 2.5, p1).toFixed(1));
+        /* Dashes grow and merge as the rotation completes */
+        pathEl.setAttribute('stroke-dasharray', lerp(4,12,p1).toFixed(1)+' '+lerp(10,3,p1).toFixed(1));
+        pathEl.setAttribute('transform', 'rotate('+( p1 * 360).toFixed(1)+',50,20)');
+      } else {
+        /* Phase 2 — morph into infinity */
+        var rawP = (elapsed - ROTATE_DUR) / MORPH_DUR;
+        var p2   = easeOut(Math.min(rawP, 1));
+        pathEl.style.opacity = '1';
+        pathEl.removeAttribute('transform');
+        pathEl.setAttribute('stroke-dasharray', '');
+        var fr = getFrame(p2);
+        pathEl.setAttribute('d', toD(fr.c));
+        pathEl.setAttribute('stroke-width', fr.sw.toFixed(1));
+      }
+    }
+
+    requestAnimationFrame(frame);
   }
 
   /* ── Hero stat reveals ─────────────────────────────────────────── */
@@ -2216,7 +2198,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const inf = e.target.querySelector('.hero-stat-infinity');
-      if (inf) { inf.classList.add('visible'); portalSparks(inf); }
+      if (inf) { const p = inf.querySelector('.inf-path'); if (p) animateInfinity(p); }
       const ctr = e.target.querySelector('.counter');
       if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
       heroIO.unobserve(e.target);
@@ -2230,7 +2212,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       const r = el.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) {
         const inf = el.querySelector('.hero-stat-infinity');
-        if (inf && !inf.classList.contains('visible')) { inf.classList.add('visible'); portalSparks(inf); }
+        if (inf) { const p = inf.querySelector('.inf-path'); if (p && !p.dataset.animFired) animateInfinity(p); }
         const ctr = el.querySelector('.counter');
         if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
       }
