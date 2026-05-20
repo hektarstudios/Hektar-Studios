@@ -766,7 +766,7 @@
 
 <!-- NAV -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo"><img src="logo.png" alt="Hektar Studios" class="nav-logo-img" /></a>
+  <a href="#hero" class="nav-logo"><img src="logo-cropped.png" alt="Hektar Studios" class="nav-logo-img" /></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
@@ -1436,7 +1436,7 @@
 <footer>
   <div class="footer-inner">
     <div style="display:flex;flex-direction:column;align-items:center;width:fit-content;">
-      <img src="logo.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;"/>
+      <img src="logo-cropped.png" alt="Hektar Studios" style="height:64px;width:auto;display:block;margin-bottom:4px;"/>
       <div class="footer-tagline">Crafting Sound. Creating Soul.</div>
     </div>
     <div class="footer-hero-text">Artist First.<br>Always.</div>
@@ -2056,8 +2056,21 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
       heroIO.unobserve(e.target);
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.05 });
   document.querySelectorAll('.hero-stat').forEach(el => heroIO.observe(el));
+
+  /* Fallback: if stats are already in viewport on load, trigger immediately */
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.hero-stat').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        const inf = el.querySelector('.hero-stat-infinity');
+        if (inf && !inf.classList.contains('visible')) inf.classList.add('visible');
+        const ctr = el.querySelector('.counter');
+        if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
+      }
+    });
+  });
 
   /* ── Select always shows floated label (prompt is first option) ── */
   document.querySelectorAll('.form-float select').forEach(sel => {
