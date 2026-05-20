@@ -174,22 +174,8 @@ html { background:#0a0908; }
       stroke: rgba(120, 180, 255, 0.10);
       stroke-width: 1;
     }
-    .sbg-wave-flow {
-      stroke: rgba(232, 245, 66, 0.55);
-      stroke-width: 1.5;
-      stroke-dasharray: 14 4000;
-      filter: drop-shadow(0 0 4px rgba(232,245,66,0.55));
-      animation: wavePulse 14s linear infinite;
-    }
-    .sbg-wave-flow.w-blue   { stroke: rgba(80,170,255,0.55);  filter: drop-shadow(0 0 4px rgba(80,170,255,0.5)); }
-    .sbg-wave-flow.w-orange { stroke: rgba(255,130,60,0.50);  filter: drop-shadow(0 0 4px rgba(255,130,60,0.5)); }
-    .sbg-wave-flow.w-magenta{ stroke: rgba(204,68,255,0.45);  filter: drop-shadow(0 0 4px rgba(204,68,255,0.5)); }
-    .sbg-wave-flow.delay-1 { animation-duration: 18s; animation-delay: -4s; }
-    .sbg-wave-flow.delay-2 { animation-duration: 22s; animation-delay: -9s; }
-    .sbg-wave-flow.delay-3 { animation-duration: 16s; animation-delay: -2s; }
-    .sbg-wave-flow.delay-4 { animation-duration: 24s; animation-delay: -12s; }
-    .sbg-wave-flow.delay-5 { animation-duration: 20s; animation-delay: -6s; }
-    @keyframes wavePulse { from { stroke-dashoffset: 4014; } to { stroke-dashoffset: 0; } }
+    /* Traveling spark dashes removed for performance */
+    .sbg-wave-flow { display: none; }
 
     /* ── Floating particles (faint music dust) ── */
     .sbg-particle {
