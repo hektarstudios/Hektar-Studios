@@ -271,7 +271,7 @@
     .nav-logo-img{height:64px;width:auto;display:block;}
     @media(max-width:768px){.nav-logo-img{height:44px;}}
     .nav-links{display:flex;align-items:center;gap:36px;list-style:none;}
-    .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:400;transition:color 0.2s, text-shadow 0.2s;}
+    .nav-links a{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,196,190,0.82);font-weight:400;transition:color 0.2s, text-shadow 0.2s;}
     .nav-links a:hover{color:var(--cream);text-shadow:0 0 18px rgba(255,255,255,0.55);}
     .nav-cta{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--bg);background:var(--yellow);padding:10px 22px;border-radius:2px;font-weight:500;transition:background 0.18s,color 0.18s,transform 0.2s;}
     .nav-cta:hover{background:#fff!important;color:#000!important;transform:translateY(-1px);}
@@ -585,7 +585,7 @@
     .form-note{font-size:12px;color:var(--muted);font-weight:300;font-style:italic;}
     .form-success{display:none;background:rgba(232,245,66,0.06);border:1px solid rgba(232,245,66,0.3);border-radius:2px;padding:24px;text-align:center;}
     .form-success.show{display:block;}
-    .form-success-icon{font-size:32px;margin-bottom:12px;}
+    .form-success-icon{margin-bottom:16px;}
     .form-success-title{font-family:var(--font-hero);font-size:24px;color:var(--yellow);text-transform:uppercase;margin-bottom:8px;}
     .form-success-text{font-size:14px;color:var(--muted);font-weight:300;}
 
@@ -1427,7 +1427,9 @@
         <p class="form-note">We'll get back to you within 24 hours. Promise.</p>
       </div>
       <div class="form-success" id="formSuccess">
-        <div class="form-success-icon">🎚️</div>
+        <div class="form-success-icon">
+          <img src="logo-cropped.png" alt="Hektar Studios" style="height:56px;width:auto;display:block;margin:0 auto;mix-blend-mode:screen;"/>
+        </div>
         <div class="form-success-title">Message received.</div>
         <div class="form-success-text">We'll be in touch within 24 hours. Keep making things.</div>
       </div>
