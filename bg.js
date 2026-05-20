@@ -17,19 +17,13 @@
   };
   fullImg.src = 'assets/studio.jpg';
 
-  /* (Floating particles removed by user request) */
-
-  /* Size the flowing blob layer to match document height so blobs distribute across full scroll */
+  /* Size the flowing blob layer to match document height */
   function sizeFlow() {
-    const docH = Math.max(
-      document.documentElement.scrollHeight,
-      document.body.scrollHeight
-    );
+    const docH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
     flow.style.height = docH + 'px';
   }
   sizeFlow();
   window.addEventListener('resize', sizeFlow);
-  /* Refresh after fonts/images load and after late content settles */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeFlow);
   window.addEventListener('load', sizeFlow);
   setTimeout(sizeFlow, 600);
@@ -42,17 +36,17 @@
   let velocitySmooth = 0;
   window.addEventListener('scroll', () => { targetY = window.scrollY; }, { passive: true });
 
-  /* Performance: pause rAF when tab is hidden */
+  /* Pause loop when tab is hidden — saves CPU/GPU entirely */
   let rafPaused = false;
   document.addEventListener('visibilitychange', () => { rafPaused = document.hidden; });
 
-  /* Performance: skip style updates when value hasn't meaningfully changed */
+  /* Skip DOM writes when value hasn't meaningfully changed */
   let lastPhotoX = -999, lastPhotoTY = -999, lastPhotoScale = -999;
   let frameCount = 0;
+  let t0 = 0;
 
   function tick(now) {
-    requestAnimationFrame(tick);
-    if (rafPaused) return;
+    if (rafPaused) { requestAnimationFrame(tick); return; }
 
     const t = (now || 0) * 0.001;
     if (!t0) t0 = t;
@@ -65,34 +59,27 @@
     velocitySmooth += (v - velocitySmooth) * 0.16;
     lastY = currentY;
 
-    const docH = Math.max(1,
-      (document.documentElement.scrollHeight || 1) - window.innerHeight
-    );
+    const docH = Math.max(1, (document.documentElement.scrollHeight || 1) - window.innerHeight);
     const progress = Math.min(1, Math.max(0, currentY / docH));
 
-    /* PHOTO ─ transform (composited — update every frame) */
+    /* PHOTO — 8s breathing zoom + vertical parallax + horizontal pan */
     const breathT      = tt * (2 * Math.PI / 8);
     const breath       = Math.sin(breathT);
     const breathScale  = 0.030 * breath;
     const breathDriftY = 4 * Math.sin(breathT);
-    const photoTY    = -currentY * 0.18 + breathDriftY;
-    const photoScale = 1.18 + progress * 0.05 + breathScale;
+    const photoTY      = -currentY * 0.18 + breathDriftY;
+    const photoScale   = 1.18 + progress * 0.05 + breathScale;
+    const photoX       = 70 - progress * 40;
 
-    /* Only update transform props when they've actually changed */
-    if (Math.abs(photoTY    - lastPhotoTY)    > 0.05) { photo.style.setProperty('--photoTY',    photoTY.toFixed(2) + 'px');    lastPhotoTY    = photoTY; }
-    if (Math.abs(photoScale - lastPhotoScale) > 0.0002) { photo.style.setProperty('--photoScale', photoScale.toFixed(4));         lastPhotoScale = photoScale; }
+    /* Only write to DOM when value has actually changed — avoids redundant repaints */
+    if (Math.abs(photoTY    - lastPhotoTY)    > 0.05)   { photo.style.setProperty('--photoTY',    photoTY.toFixed(2) + 'px');  lastPhotoTY    = photoTY; }
+    if (Math.abs(photoScale - lastPhotoScale) > 0.0002) { photo.style.setProperty('--photoScale', photoScale.toFixed(4));       lastPhotoScale = photoScale; }
+    if (Math.abs(photoX     - lastPhotoX)     > 0.05)   { photo.style.setProperty('--photoX',     photoX.toFixed(2) + '%');    lastPhotoX     = photoX; }
 
-    /* background-position: only update on scroll change (forces CPU repaint — skip when idle) */
-    const photoX = 70 - progress * 40;
-    if (Math.abs(photoX - lastPhotoX) > 0.05) {
-      photo.style.setProperty('--photoX', photoX.toFixed(2) + '%');
-      lastPhotoX = photoX;
-    }
-
-    /* FLOWING blob layer — composited transform */
+    /* BLOB FLOW — composited transform, safe to run every frame */
     flow.style.setProperty('--flowY', (-currentY * 0.82).toFixed(2) + 'px');
 
-    /* SPOTLIGHT — slow drift, throttle to ~20fps (every 3rd frame) to avoid gradient repaints */
+    /* SPOTLIGHT — throttled to ~20fps; slow drift is imperceptible at lower rate */
     if (frameCount % 3 === 0) {
       const sX  = 50 + Math.sin(tt * 0.30) * 25;
       const sY  = 30 + Math.sin(tt * 0.45) * 18 + Math.sin(tt * 0.18) * 8;
@@ -115,5 +102,8 @@
       neon.style.transform =
         `translate3d(${(Math.sin(tt * 9) * jitter).toFixed(2)}px, ${ny.toFixed(2)}px, 0) rotate(-1deg)`;
     }
+
+    requestAnimationFrame(tick);
   }
+  requestAnimationFrame(tick); /* ← start the loop */
 })();
