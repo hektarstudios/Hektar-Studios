@@ -83,7 +83,7 @@ html { background:#0a0908; }
     .sbg-blob {
       position: absolute;
       border-radius: 50%;
-      filter: blur(95px);
+      filter: blur(55px);
       mix-blend-mode: screen;
       will-change: transform, opacity;
     }
