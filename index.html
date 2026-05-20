@@ -2000,7 +2000,12 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
   const navLinks = Array.from(document.querySelectorAll('.nav-links a:not(.nav-cta)'));
   const sectionIds = ['about','services','audio','portfolio','testimonials'];
   const sectionMap = sectionIds.map(id => ({ id, el: document.getElementById(id) })).filter(s => s.el);
+
+  let navClickSuppressed = false;
+  let navClickTimer = null;
+
   function updateNavSpy() {
+    if (navClickSuppressed) return;
     const scrollPos = window.scrollY + Math.max(120, window.innerHeight * 0.28);
     let active = null;
     for (const s of sectionMap) {
@@ -2010,6 +2015,30 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       a.classList.toggle('nav-active', a.getAttribute('href') === '#' + active);
     });
   }
+
+  /* On click: set active immediately, suppress scroll-spy for 700ms */
+  navLinks.forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.forEach(l => l.classList.remove('nav-active'));
+      a.classList.add('nav-active');
+      navClickSuppressed = true;
+      clearTimeout(navClickTimer);
+      navClickTimer = setTimeout(() => {
+        navClickSuppressed = false;
+        updateNavSpy();
+      }, 700);
+    });
+  });
+
+  /* Mobile nav — same suppression */
+  document.querySelectorAll('.mobile-nav-link').forEach(l => {
+    l.addEventListener('click', () => {
+      navClickSuppressed = true;
+      clearTimeout(navClickTimer);
+      navClickTimer = setTimeout(() => { navClickSuppressed = false; updateNavSpy(); }, 700);
+    });
+  });
+
   window.addEventListener('scroll', updateNavSpy, { passive: true });
   window.addEventListener('resize', updateNavSpy);
   updateNavSpy();
