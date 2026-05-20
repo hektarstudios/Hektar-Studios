@@ -29,6 +29,28 @@
   setTimeout(sizeFlow, 600);
   setTimeout(sizeFlow, 2000);
 
+  /* Inactivity breathing — photo breathes only after 20s with no user activity */
+  let breathingActive = false;
+  let inactivityTimer = null;
+
+  function startBreathing() {
+    breathingActive = true;
+    photo.style.animationPlayState = 'running';
+  }
+  function stopBreathing() {
+    breathingActive = false;
+    photo.style.animationPlayState = 'paused';
+  }
+  function resetInactivity() {
+    stopBreathing();
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(startBreathing, 20000);
+  }
+  ['scroll','mousemove','click','keydown','touchstart','wheel'].forEach(evt => {
+    window.addEventListener(evt, resetInactivity, { passive: true });
+  });
+  resetInactivity(); /* start 20s countdown immediately on load */
+
   /* Scroll state */
   let targetY = window.scrollY || 0;
   let currentY = targetY;
@@ -62,11 +84,11 @@
     const docH = Math.max(1, (document.documentElement.scrollHeight || 1) - window.innerHeight);
     const progress = Math.min(1, Math.max(0, currentY / docH));
 
-    /* PHOTO — 8s breathing zoom + vertical parallax + horizontal pan */
+    /* PHOTO — breathing zoom (only when idle 20s) + vertical parallax + horizontal pan */
     const breathT      = tt * (2 * Math.PI / 8);
     const breath       = Math.sin(breathT);
-    const breathScale  = 0.030 * breath;
-    const breathDriftY = 4 * Math.sin(breathT);
+    const breathScale  = breathingActive ? (0.030 * breath) : 0;
+    const breathDriftY = breathingActive ? (4 * Math.sin(breathT)) : 0;
     const photoTY      = -currentY * 0.18 + breathDriftY;
     const photoScale   = 1.18 + progress * 0.05 + breathScale;
     const photoX       = 70 - progress * 40;
