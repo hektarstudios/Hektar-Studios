@@ -1,4 +1,4 @@
-    /* ── 1. Shine sweep on primary CTAs ── */
+/* ── 1. Shine sweep on primary CTAs ── */
     .nav-cta, .form-submit, .freebie-btn, .google-cta {
       position: relative;
       overflow: hidden;
@@ -231,7 +231,7 @@
       box-shadow: 0 0 6px rgba(232,245,66,0.55);
       transform: scaleX(0);
       transform-origin: left center;
-      transition: transform 0.32s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.2s;
+      transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.2s;
       pointer-events: none;
       opacity: 0.9;
     }
