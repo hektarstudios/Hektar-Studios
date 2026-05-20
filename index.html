@@ -246,7 +246,7 @@
 
     /* NAV */
     nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:24px 48px;display:flex;align-items:center;justify-content:space-between;transition:background 0.4s,padding 0.4s;}
-    nav.scrolled{background:rgba(10,9,8,0.92);backdrop-filter:blur(12px);padding:16px 48px;border-bottom:1px solid var(--border);}
+    nav.scrolled{background:rgba(10,9,8,0.94);padding:16px 48px;border-bottom:1px solid var(--border);}
     .nav-logo{display:flex;align-items:center;}
     .nav-logo-img{height:64px;width:auto;display:block;}
     @media(max-width:768px){.nav-logo-img{height:44px;}}
@@ -384,7 +384,7 @@
     .cf-label-r{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--yellow);}
     .crossfade-ui{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:14px 18px;}
     /* #4 consistent SVG play/pause */
-    .play-btn{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s,color 0.2s;color:var(--yellow);}
+    .play-btn{position:relative;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.2s,color 0.2s;color:var(--yellow);}
     .play-btn:hover,.play-btn.playing{background:var(--yellow);color:var(--bg);border-color:var(--yellow);}
     .play-btn svg{width:14px;height:14px;fill:currentColor;pointer-events:none;}
     /* Waveform column — waveform + slider stacked, share same width */
@@ -626,7 +626,7 @@
     #about,#services,#audio,#portfolio,#testimonials,#contact{position:relative;overflow:hidden;}
     .freebie-btn{display:inline-flex;align-items:center;gap:10px;background:var(--yellow);color:var(--bg);font-family:var(--font-hero);font-size:13px;letter-spacing:2px;text-transform:uppercase;padding:16px 28px;text-decoration:none;transition:background 0.2s,transform 0.2s;flex-shrink:0;}
     .freebie-btn:hover{background:#fff;transform:translateY(-2px);}
-    .reveal{opacity:0;transform:translateY(32px);transition:opacity 0.8s var(--transition),transform 0.8s var(--transition);}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity 0.55s var(--transition),transform 0.55s var(--transition);}
     .reveal.visible{opacity:1;transform:none;}
     .reveal-delay-1{transition-delay:0.1s;}
     .reveal-delay-2{transition-delay:0.2s;}
@@ -2091,7 +2091,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     const io = new IntersectionObserver(entries => {
       audioInView = entries[0].isIntersecting;
       render();
-    }, { threshold: 0, rootMargin: '-80px 0px -10% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 0px 0px' });
     io.observe(audioSection);
   }
 
@@ -2126,7 +2126,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       np.setAttribute('aria-hidden', 'true');
     }
   }
-  setInterval(render, 300);
+  setInterval(render, 80);
 
   npPlay.addEventListener('click', () => {
     const a = getActive(); if (!a) return;
