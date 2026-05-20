@@ -829,18 +829,11 @@
         <div class="hero-stat-num">
           <div class="hero-stat-infinity" aria-label="Infinite">
             <svg viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
-              <!-- Portal ring: dashed circle that spins in then fades -->
-              <circle class="inf-portal" cx="50" cy="20" r="22"/>
-              <!-- 8 sparks on the ring perimeter, fly radially outward -->
-              <circle class="inf-sp sp1" cx="72"  cy="20"  r="2"/>
-              <circle class="inf-sp sp2" cx="65.6" cy="35.6" r="1.6"/>
-              <circle class="inf-sp sp3" cx="50"  cy="42"  r="2"/>
-              <circle class="inf-sp sp4" cx="34.4" cy="35.6" r="1.6"/>
-              <circle class="inf-sp sp5" cx="28"  cy="20"  r="2"/>
-              <circle class="inf-sp sp6" cx="34.4" cy="4.4" r="1.6"/>
-              <circle class="inf-sp sp7" cx="50"  cy="-2"  r="2"/>
-              <circle class="inf-sp sp8" cx="65.6" cy="4.4" r="1.6"/>
-              <!-- Infinity path: draws itself after portal fades -->
+              <!-- Outer portal ring — spins clockwise, dashed arc -->
+              <circle class="inf-portal"   cx="50" cy="20" r="22"/>
+              <!-- Inner portal ring — spins counter-clockwise, tighter -->
+              <circle class="inf-portal-2" cx="50" cy="20" r="14"/>
+              <!-- Infinity path — draws itself as the rings fade -->
               <path class="inf-path" d="M 28,20 C 28,8 42,8 50,20 C 58,32 72,32 72,20 C 72,8 58,8 50,20 C 42,32 28,32 28,20 Z"/>
             </svg>
           </div>
@@ -2066,7 +2059,176 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
   window.addEventListener('resize', updateNavSpy);
   updateNavSpy();
 
-  /* ── Hero stat reveals: ∞ portal + slot-machine counter ── */
+  /* ══════════════════════════════════════════════════════════════════
+     PORTAL SPARKS — canvas particle system, fires once, self-cleans
+     ══════════════════════════════════════════════════════════════════ */
+  function portalSparks(wrapper) {
+    if (wrapper.dataset.portalFired) return;
+    wrapper.dataset.portalFired = '1';
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    /* Wait for the reveal transition to settle before capturing position */
+    setTimeout(function() {
+      var rect = wrapper.getBoundingClientRect();
+      var pad  = 90;                    /* canvas extends beyond the wrapper */
+      var W    = rect.width  + pad * 2;
+      var H    = rect.height + pad * 2;
+      var dpr  = Math.min(window.devicePixelRatio || 1, 2);
+
+      var canvas = document.createElement('canvas');
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      canvas.style.cssText = 'position:fixed;left:' + (rect.left - pad) + 'px;top:' + (rect.top - pad) + 'px;'
+                           + 'width:' + W + 'px;height:' + H + 'px;pointer-events:none;z-index:9997;';
+      document.body.appendChild(canvas);
+
+      var ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+
+      var cx = W / 2;                   /* canvas-local centre */
+      var cy = H / 2;
+      var px = rect.width / 100;        /* 1 SVG unit in CSS pixels */
+      var R  = 22 * px;                 /* outer ring radius (SVG r=22 scaled) */
+
+      /* ── 24 sparks distributed around the outer ring ── */
+      var N = 24;
+      var sparks = [];
+      for (var i = 0; i < N; i++) {
+        var base   = (i / N) * Math.PI * 2;
+        var jitter = (Math.random() - 0.5) * 0.5;
+        sparks.push({
+          angle  : base + jitter,
+          speed  : 0.028 + Math.random() * 0.030,   /* orbital rad/frame */
+          x      : cx + Math.cos(base) * R,
+          y      : cy + Math.sin(base)  * R,
+          vx     : 0,
+          vy     : 0,
+          size   : (0.9 + Math.random() * 1.3) * px,
+          hue    : 44 + Math.random() * 24,          /* gold → warm yellow */
+          life   : 1,
+          burst  : false,
+          earlyOut: Math.random() < 0.2,             /* 20% die a bit earlier */
+        });
+      }
+
+      var ORBIT_END = 1100;   /* ms sparks orbit before bursting */
+      var TOTAL     = 3800;   /* ms total canvas lifetime        */
+      var t0 = performance.now();
+      var paused = false;
+
+      function onVis() { paused = document.hidden; }
+      document.addEventListener('visibilitychange', onVis);
+
+      function frame(now) {
+        var elapsed = now - t0;
+
+        if (elapsed >= TOTAL) {
+          canvas.remove();
+          document.removeEventListener('visibilitychange', onVis);
+          return;
+        }
+
+        requestAnimationFrame(frame);
+        if (paused) return;
+
+        /* ── Trail fade — gives sparks glowing tails ── */
+        ctx.globalAlpha = 1;
+        ctx.fillStyle   = 'rgba(0,0,0,0.22)';
+        ctx.fillRect(0, 0, W, H);
+
+        var inOrbit = elapsed < ORBIT_END;
+
+        /* ── Burst flash ring — brief bright pulse when sparks explode ── */
+        if (elapsed > ORBIT_END && elapsed < ORBIT_END + 200) {
+          var fp = (elapsed - ORBIT_END) / 200;
+          ctx.globalAlpha  = (1 - fp) * 0.55;
+          ctx.strokeStyle  = 'rgba(255,248,160,0.85)';
+          ctx.lineWidth    = 2 * px;
+          ctx.shadowColor  = 'rgba(232,245,66,1)';
+          ctx.shadowBlur   = 12 * px;
+          ctx.beginPath();
+          ctx.arc(cx, cy, R * (1 + fp * 0.7), 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+          ctx.shadowBlur  = 0;
+        }
+
+        /* ── Draw each spark ── */
+        sparks.forEach(function(sp) {
+
+          if (inOrbit) {
+            /* Orbit around the ring */
+            sp.angle += sp.speed;
+            sp.x = cx + Math.cos(sp.angle) * R;
+            sp.y = cy + Math.sin(sp.angle) * R;
+            sp.life = 1;
+
+            /* Pre-arm burst velocity near orbit end */
+            if (elapsed > ORBIT_END * 0.70 && !sp.burst) {
+              sp.burst = true;
+              var outAngle = sp.angle + (Math.random() - 0.5) * 1.6;
+              var spd = (2.0 + Math.random() * 3.2) * px;
+              sp.vx = Math.cos(outAngle) * spd;
+              sp.vy = Math.sin(outAngle) * spd;
+            }
+          } else {
+            /* Burst phase — physics */
+            if (!sp.burst) {
+              var ba = sp.angle + (Math.random() - 0.5) * 1.6;
+              var bs = (2.0 + Math.random() * 3.2) * px;
+              sp.vx = Math.cos(ba) * bs;
+              sp.vy = Math.sin(ba) * bs;
+              sp.burst = true;
+            }
+            sp.x  += sp.vx;
+            sp.y  += sp.vy;
+            sp.vy += 0.052 * px;   /* gravity */
+            sp.vx *= 0.973;        /* air drag */
+            sp.vy *= 0.973;
+
+            var prog = (elapsed - ORBIT_END) / (TOTAL - ORBIT_END);
+            var fade = sp.earlyOut ? (1 - prog * 1.35) : (1 - prog * 1.05);
+            sp.life  = Math.max(0, fade);
+            sp.size *= 0.9980;
+          }
+
+          if (sp.life < 0.02) return;
+
+          var alpha = inOrbit ? 0.9 : sp.life;
+          var lum   = 62 + sp.life * 22;
+
+          ctx.globalAlpha = alpha;
+          ctx.shadowColor = 'hsla(' + sp.hue + ',100%,70%,' + alpha + ')';
+          ctx.shadowBlur  = sp.size * 4.5;
+          ctx.fillStyle   = 'hsl(' + sp.hue + ',100%,' + lum + '%)';
+
+          /* Fast-moving sparks render as streaks */
+          var speed2 = sp.vx * sp.vx + sp.vy * sp.vy;
+          if (!inOrbit && speed2 > sp.size * sp.size * 4) {
+            ctx.beginPath();
+            ctx.moveTo(sp.x, sp.y);
+            ctx.lineTo(sp.x - sp.vx * 2.8, sp.y - sp.vy * 2.8);
+            ctx.strokeStyle = 'hsl(' + sp.hue + ',100%,' + lum + '%)';
+            ctx.lineWidth   = sp.size * 1.4;
+            ctx.lineCap     = 'round';
+            ctx.stroke();
+          } else {
+            ctx.beginPath();
+            ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur  = 0;
+      }
+
+      requestAnimationFrame(frame);
+
+    }, 620); /* delay until reveal transition settles (~550ms) */
+  }
+
+  /* ── Hero stat reveals ─────────────────────────────────────────── */
   function animateCounter(el) {
     const target = parseInt(el.dataset.target || '0', 10);
 
@@ -2118,7 +2280,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     entries.forEach(e => {
       if (!e.isIntersecting) return;
       const inf = e.target.querySelector('.hero-stat-infinity');
-      if (inf) inf.classList.add('visible');
+      if (inf) { inf.classList.add('visible'); portalSparks(inf); }
       const ctr = e.target.querySelector('.counter');
       if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
       heroIO.unobserve(e.target);
@@ -2132,7 +2294,7 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
       const r = el.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) {
         const inf = el.querySelector('.hero-stat-infinity');
-        if (inf && !inf.classList.contains('visible')) inf.classList.add('visible');
+        if (inf && !inf.classList.contains('visible')) { inf.classList.add('visible'); portalSparks(inf); }
         const ctr = el.querySelector('.counter');
         if (ctr && !ctr.dataset.animated) { ctr.dataset.animated = '1'; animateCounter(ctr); }
       }
