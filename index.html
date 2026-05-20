@@ -242,6 +242,19 @@
 
 
 
+    /* ── Animated film grain canvas — full page overlay ── */
+    #grainCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9;               /* above content (0), below nav (100) and modals (1000) */
+      opacity: 0.048;
+      mix-blend-mode: overlay;
+      display: block;
+    }
+    @media (prefers-reduced-motion: reduce) { #grainCanvas { display: none; } }
+
     /* Mini player — icon toggle via class, no innerHTML reconstruction */
     .np-icon-pause { display: none; }
     .np-btn.is-playing .np-icon-play  { display: none; }
@@ -748,7 +761,7 @@
   <!-- (Particles removed) -->
 
   <!-- Grain -->
-  <div class="studio-bg__grain"></div>
+  <!-- grain handled by #grainCanvas below -->
 </div>
 
 
@@ -2187,6 +2200,84 @@ document.getElementById('formSubmit').addEventListener('click',()=>{
     window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
   });
 
+})();
+</script>
+
+<!-- Animated film grain overlay — covers full page -->
+<canvas id="grainCanvas" aria-hidden="true"></canvas>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   FILM GRAIN — animated canvas noise overlay
+   · XorShift32 PRNG (~10× faster than Math.random)
+   · 12 fps — imperceptible vs 24fps but saves ~50% CPU
+   · Canvas dimension capped at 1920px on any axis (for 4K/TV screens)
+     and CSS-stretched to fill viewport — coarser grain looks great at distance
+   · Pauses automatically when tab is hidden
+   · Respects prefers-reduced-motion
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+  const canvas = document.getElementById('grainCanvas');
+  if (!canvas) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  /* XorShift32 — fast, uniform, good enough for visual noise */
+  let seed = (Date.now() ^ 0xDEADBEEF) | 1;
+  function rand() {
+    seed ^= seed << 13;
+    seed ^= seed >> 17;
+    seed ^= seed << 5;
+    return seed;
+  }
+
+  const MAX_DIM = 1920; /* never rasterise more than 1920px on any axis */
+  let imageData, data32, rafPaused = false;
+
+  function resize() {
+    const W = window.innerWidth  || 320;
+    const H = window.innerHeight || 480;
+    /* Scale down large viewports (4K TVs, wide monitors) — CSS stretches to fill */
+    const s = Math.min(1, MAX_DIM / Math.max(W, H));
+    canvas.width  = Math.round(W * s);
+    canvas.height = Math.round(H * s);
+    imageData = ctx.createImageData(canvas.width, canvas.height);
+    data32    = new Uint32Array(imageData.data.buffer);
+  }
+
+  resize();
+  window.addEventListener('resize',                 resize, { passive: true });
+  window.addEventListener('orientationchange',      resize, { passive: true }); /* mobile rotate */
+  if (screen.orientation) screen.orientation.addEventListener('change', resize);
+
+  /* Pause grain loop when tab is hidden — free up CPU/battery */
+  document.addEventListener('visibilitychange', () => { rafPaused = document.hidden; });
+
+  const FPS      = 12;
+  const INTERVAL = 1000 / FPS;
+  let last = 0;
+
+  function tick(now) {
+    requestAnimationFrame(tick);
+    if (rafPaused || now - last < INTERVAL) return;
+    last = now;
+
+    /* Write every pixel with random grey, alpha=255 (Uint32, little-endian: 0xAA_BB_GG_RR) */
+    const len = data32.length;
+    for (let i = 0; i < len; i++) {
+      const v = rand() & 0xFF;
+      data32[i] = 0xFF000000 | (v << 16) | (v << 8) | v;
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  requestAnimationFrame(tick);
 })();
 </script>
 
